@@ -33,9 +33,8 @@
     "debug": "~0.7.2",
     "ansi-color": "0.2",
     "date-utils": "1.2",
-    "cordell": "0.1",
-    "growl": "*",
     "cordell": "*",
+    "growl": "*",
     "consolidate": "*",
     "ejs": "*",
     "mongoose": "*",
@@ -46,21 +45,20 @@
     "passport": "*",
     "bower": "1.3.8"
   },
-  
   "devDependencies": {
-    "mocha": "*",
-    "chai": "*",
-    "sinon": "*",
-    "sinon-chai": "*",
-    "supertest": "*",
-    "blanket": "*",
     "auto-reload-brunch": "1.7",
+    "blanket": "*",
+    "chai": "1.9.2",
     "karma": "~0.12.16",
-    "karma-ng-scenario": "~0.1.0",
-    "karma-mocha": "~0.1.3",
+    "karma-chai": "~0.1.0",
     "karma-chrome-launcher": "~0.1.4",
     "karma-growl-reporter": "~0.1.1",
-    "karma-chai": "~0.1.0",
-    "karma-requirejs": "~0.2.2"
+    "karma-mocha": "~0.1.3",
+    "karma-ng-scenario": "~0.1.0",
+    "karma-requirejs": "~0.2.2",
+    "mocha": "*",
+    "sinon": "*",
+    "sinon-chai": "*",
+    "supertest": "*"
   }
 }
