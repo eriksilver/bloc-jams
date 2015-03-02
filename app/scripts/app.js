@@ -1,1 +1,3 @@
 require("./landing");
+  require('./collection');
+
