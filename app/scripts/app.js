@@ -1,3 +1,5 @@
 require("./landing");
-  require('./collection');
+require('./collection');
+require('./album');
+
 
