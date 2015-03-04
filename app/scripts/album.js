@@ -30,21 +30,79 @@ var albumMarconi = {
      ]
  };
 
+ //define variable globally (outside of a function)
+ var currentlyPlayingSong = null;
+
 // the createSongRow function creates a row of HTML with song data
 //  it takes 3 arguments: the index of the loop we're in,
 //  the name of our song, and the length of the song
  var createSongRow = function(songNumber, songName, songLength) {
   var template =
       '<tr>' //makes a table row
-    + '  <td class="col-md-1">' + songNumber + '</td>'
+    + '  <td class="song-number col-md-1" data-song-number="' + songNumber + '">' + songNumber + '</td>' 
+          //adding song-number class allows us to replace song number with play button on hover
+          //data-song-number is a data attribute in the div to store replace song number on OffHover
     + '  <td class="col-md-9">' + songName +  '</td>'
     + '  <td class="col-md-2">' + songLength + '</td>'
     + '</tr>'
     ;
   //when we call $(template), the string of HTML made of above becomes
   //  a jQuery object that we can append to our song list
-  return $(template);
- };
+  // instead of returning the row template immediately, we'll attach hover functionality to it first
+  var $row = $(template);
+
+  //change from a song number to play button when the song isnt playing and we hover over the row
+  var onHover = function(event) {
+    var songNumberCell = $(this).find('.song-number'); //selects song number
+    var songNumber = songNumberCell.data('song-number');
+    if (songNumber !== currentlyPlayingSong) {
+      songNumberCell.html('<a class="album-song-button"><i class="fa fa-play"></i></a>');
+    //note jQuery html function replaces (rather than appends) the cell's contents
+    // with new HTML; in this case the album-song-button link with a play icon inside
+    }
+  };
+
+  //change from a play button to a song number when the song isn't playing & we hover off row
+  var offHover = function(event) {
+    var songNumberCell = $(this).find('.song-number');
+    var songNumber = songNumberCell.data('song-number'); //data attrib to remember song number
+    songNumberCell.html(songNumber); //find song-number and replaces with empty string
+    if (songNumber !== currentlyPlayingSong) {
+      songNumberCell.html(songNumber);
+    } 
+  };
+ 
+// Toggle the play, pause, and song number based on which play/pause button we clicked on.
+  var clickHandler = function(event) {
+    var songNumber = $(this).data('song-number');
+
+    if (currentlyPlayingSong !== null) {
+      //if a song is playing, stop playing current song, replace stopped song button with number
+      // Revert to song number for currently playing song because user started playing new song.
+      currentlyPlayingCell = $('.song-number[data-song-number="' + currentlyPlayingSong + '"]');
+      currentlyPlayingCell.html(currentlyPlayingSong);
+    }
+
+    if (currentlyPlayingSong !== songNumber) {
+      //if a non-playing song was clicked, set current song to the one clicked
+      // Switch from Play -> Pause button to indicate new song is playing.
+      $(this).html('<a class="album-song-button"><i class="fa fa-pause"></i></a>');
+      currentlyPlayingSong = songNumber;
+    }
+
+    else if (currentlyPlayingSong === songNumber) {
+      //the playing song was clicked
+      // Switch from Pause -> Play button to pause currently playing song.
+      //set the current song to null
+      $(this).html('<a class="album-song-button"><i class="fa fa-play"></i></a>');
+      currentlyPlayingSong = null;
+    }
+  };
+
+  $row.find('.song-number').click(clickHandler); //add clickHandler to play button for functionality 
+  $row.hover(onHover, offHover); //attach both functions to $row
+  return $row; //returns the jQuery-bound template
+};
 
  //we refactored this code into the changeAlbumView function that
  //  we can call in the .ready callback
