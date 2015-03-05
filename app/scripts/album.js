@@ -46,6 +46,8 @@ var albumMarconi = {
     + '  <td class="col-md-2">' + songLength + '</td>'
     + '</tr>'
     ;
+
+//? why make all jQuery
   //when we call $(template), the string of HTML made of above becomes
   //  a jQuery object that we can append to our song list
   // instead of returning the row template immediately, we'll attach hover functionality to it first
@@ -99,6 +101,7 @@ var albumMarconi = {
     }
   };
 
+//?
   $row.find('.song-number').click(clickHandler); //add clickHandler to play button for functionality 
   $row.hover(onHover, offHover); //attach both functions to $row
   return $row; //returns the jQuery-bound template
@@ -108,6 +111,7 @@ var albumMarconi = {
  //  we can call in the .ready callback
  var changeAlbumView = function(album) {
 
+//? what are we doing here?
     // update the album title
     var $albumTitle = $('.album-title');
     $albumTitle.text(album.name);
@@ -139,13 +143,13 @@ var albumMarconi = {
     }
   };
 
-
-// This 'if' condition is used to prevent the jQuery modifications
-// from happening on non-Album view pages.
-//  - Use a regex to validate that the url has "/album" in its path.
-if (document.URL.match(/\/album.html/)) {
-  // wait until the HTML is fully processed
-  $(document).ready(function() {
-    changeAlbumView(albumPicasso);
-  });
-}
+//? why doc ready not at top of page? or is doing all this first before loading album?  
+  // This 'if' condition is used to prevent the jQuery modifications
+  // from happening on non-Album view pages.
+  //  - Use a regex to validate that the url has "/album" in its path.
+  if (document.URL.match(/\/album.html/)) {
+    // wait until the HTML is fully processed
+    $(document).ready(function() {
+      changeAlbumView(albumPicasso);
+    });
+  }

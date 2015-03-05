@@ -282,8 +282,7 @@ td.song-number {
  }
 
  .player-bar .play-controls a:hover { //add hover to play controls
-  font-size: 40px;
-  opacity: .5;
+  opacity: .2;
   vertical-align: middle;
  }
  
@@ -291,7 +290,6 @@ td.song-number {
    margin-right: 65px;
    transition-property: opacity;
    transition: all 400ms ease-in-out;
-
  }
 
  .player-bar .play-controls .play-pause {
