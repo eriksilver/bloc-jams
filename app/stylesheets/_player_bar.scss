@@ -44,28 +44,17 @@
 
     .previous {
       margin-right: 65px;
-      transition-property: opacity;
       transition: all 400ms ease-in-out;
-    }
-
-    .play-pause { //Play button control is larger
-      font-size: 30px;
-      vertical-align: middle;
-    }
-
-    a:hover { //add hover to play controls
-      opacity: .2;
-      vertical-align: middle;
     }
  
     .play-pause {
       margin-right: 60px;
+      font-size: 30px;
       transition: all 400ms ease-in-out; 
     }
 
-    .next {
-      margin-right: 65px;
-      transition: all 400ms ease-in-out; 
+    a:hover { //add hover to play controls
+      opacity: .2;
     }
   }
  
@@ -76,10 +65,10 @@
    
       .song-name, .artist-name {
        text-align: center;
-       font-size: 12px;
        margin: 0;
        position: absolute;
        width: 100%;
+       font-size: $base-font-size;
        font-weight: 300;
       }
 
@@ -105,16 +94,16 @@
      display: inline-block;
    
     i {
-       width: 40px;
-       font-size: 20px;
-       display: inline-block;
-       vertical-align: middle;
+      width: 40px;
+      font-size: 20px;
+      display: inline-block;
+      vertical-align: middle;
     }
 
     .seek-bar {
-       display: inline-block;
-        width: 100px;
-        vertical-align: middle;
+      display: inline-block;
+      width: 100px;
+      vertical-align: middle;
     }
   }
 }

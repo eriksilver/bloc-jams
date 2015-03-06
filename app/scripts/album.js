@@ -101,7 +101,6 @@ var albumMarconi = {
     }
   };
 
-//?
   $row.find('.song-number').click(clickHandler); //add clickHandler to play button for functionality 
   $row.hover(onHover, offHover); //attach both functions to $row
   return $row; //returns the jQuery-bound template
@@ -111,7 +110,6 @@ var albumMarconi = {
  //  we can call in the .ready callback
  var changeAlbumView = function(album) {
 
-//? what are we doing here?
     // update the album title
     var $albumTitle = $('.album-title');
     $albumTitle.text(album.name);
@@ -143,13 +141,77 @@ var albumMarconi = {
     }
   };
 
-//? why doc ready not at top of page? or is doing all this first before loading album?  
+//SEEK BAR FUNCTIONALITY
+
+//a jQuery function that passes an Event has many attributes, include pageX and pageY
+//we'll use these to locate the mouse on Click, Mouseup, and Mousemove actions
+//our function below(updateSeek...) isnt a built in jQ function and Event is not passed automatically
+//We'll pass that argument explicitly when we call the function
+ var updateSeekPercentage = function($seekBar, event) {
+   var barWidth = $seekBar.width();
+   //uses 'offset()' to calc the offsetX as horizontal distance betw
+   //the start of the seek-bar and the mouse's position
+   var offsetX = event.pageX - $seekBar.offset().left;
+ 
+  //we calc offsetXPercent as the distance of the click from the bar's left most point
+   var offsetXPercent = (offsetX  / barWidth) * 100;
+   offsetXPercent = Math.max(0, offsetXPercent); //returns largest of the 2 values
+   offsetXPercent = Math.min(100, offsetXPercent); //return smallest of the 2 values
+ 
+  //the click distance becomes a percentage of the bar's total width
+   var percentageString = offsetXPercent + '%';
+   //uses jQuery 'width' function to set width of bar's 'fill' to that offset percentage
+   $seekBar.find('.fill').width(percentageString); 
+   //uses jQuery 'css' function to set the .thumb div's LEFT attribute to that percentage too
+   $seekBar.find('.thumb').css({left: percentageString});
+  }
+
+//function to attach our seek bar updates to mouse events on the bars
+//Step 1 is a mouse click on either bar; this should call updateSeekPercentage, 
+// with the clicked bar as a first argument and the clicked event as the second
+var setupSeekBars = function() {
+ 
+   $seekBars = $('.player-bar .seek-bar');//can bind both bars in one function
+   $seekBars.click(function(event) {
+     updateSeekPercentage($(this), event);
+   });
+
+  //the dragging function begins when a user clicks and holds the mouse a 'mousedown' event 
+  $seekBars.find('.thumb').mousedown(function(event) {
+    //defines seekBar within the function, using jQuery parent function
+    //this refers to the HTML element immediately containing the thumb
+    var $seekBar = $(this).parent();
+
+    $seekBar.addClass('no-animate'); //remove animation from seekbar, making it move faster/no lag
+ 
+    //we use the bind() method to attach the 'mousemove' event to another 
+    //  call of the updateSeekPercentage function,
+    //  so that the thumb moves horizontally with the mouse
+    $(document).bind('mousemove.thumb', function(event){
+      updateSeekPercentage($seekBar, event);
+    });
+ 
+    //cleanup - release jQuery bindings on 'mouseup', 
+    //detaching the functions we wrote from the events that called them
+    //this way further mousemove or mouseup actions elswhere on page wont trigger thumb movement
+    $(document).bind('mouseup.thumb', function(){
+      $seekBar.removeClass('no-animate'); //removes no animate - restoring it  
+
+      $(document).unbind('mousemove.thumb');
+      $(document).unbind('mouseup.thumb');
+    });
+  });
+};
+
+
+
   // This 'if' condition is used to prevent the jQuery modifications
   // from happening on non-Album view pages.
   //  - Use a regex to validate that the url has "/album" in its path.
   if (document.URL.match(/\/album.html/)) {
     // wait until the HTML is fully processed
     $(document).ready(function() {
-      changeAlbumView(albumPicasso);
+      changeAlbumView(albumPicasso)
+      setupSeekBars();
     });
   }
