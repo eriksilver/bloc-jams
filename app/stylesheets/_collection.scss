@@ -1,0 +1,90 @@
+
+.collection-album-container {
+     margin-top: 30px;
+     margin-bottom: 20px;
+
+   .caption {
+     margin-top: 10px;
+
+      p {
+      font-size: $base-font-size;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.6);
+
+         a {
+          color: rgba(255, 255, 255, 0.6);
+          }
+
+         a.album-name {
+          color: white;
+          }
+      }
+    }
+    img {
+      max-width: 100%;
+      }
+      //sets the parent element to position:relative, making it positioned
+      //  so that we can set the Top and Left attributes of that first
+      //  overlay div to Zero.
+    .collection-album-image-container {
+      position: relative;
+      }
+     // sets the overlay div to position:absolute so that we can determine
+     // its position relative to its first positioned parent element
+     // with Width and Height set to 100% of it's parents, the overlay
+     // will be rendered at the upper left corner of the image container div
+    .collection-album-container .collection-album-image-overlay {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0, .4);
+      z-index: 10; //default is 0, 10 is an arbitrary positive number that sets
+       // the overlay to stack visually higher than the image container it lays over
+       // note Z indexes can also be negative, so they lie behind objects
+      }   
+
+      //this positions the icon bar and sticks is 20px, absolute position, 
+      // from the bottom of its parent, the overlay div. 
+    .collection-overlay-content {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      }
+
+    .collection-overlay-button {
+      font-size: 20px;
+      background-color: white;
+      color: $background-purple;
+      border-radius: 50% 50%; //curves the border of an element, defined by vertical
+      // and horizontal amounts; in this case turns button elements from square to round
+      display: inline-block;
+      width: 42px;
+      height: 42px;
+      }
+      //only applies styling to div on HOVER
+    .collection-overlay-button:hover {
+      cursor: pointer; //determines how mouse cursor should appear when hoving over selector
+      color: white;
+      background-color: $background-purple;
+      }
+  
+    .collection-overlay-button i {
+      line-height: 42px;
+
+        .fa-play {
+        padding-left: 5px;
+        }
+    }
+}
+ 
+
+
+
+
+
+
+
+

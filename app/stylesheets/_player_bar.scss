@@ -1,0 +1,188 @@
+//Player Bar CSS
+.player-bar {
+  position: fixed; //keeps player bar stuck to bottom of the page
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: rgba(255,255,255, 0.3);
+  z-index: 100; //ensures always visible, over the content in rest of album
+
+ a, a:hover {
+   color: white;
+   cursor: pointer;
+   text-decoration: none;
+ }
+ 
+ //Player Bar 3 sections
+ // 1 - Left Controls
+ // 2 - Middle section with song details and seek bar
+ // 3 - Right controls with volume
+ 
+  .container {
+   display: table; //make layout behave similar to HTML table; so 3 sections stay aligned
+   padding: 0;
+   min-height: 100%;
+  }
+ 
+ .left-controls {
+   width: 25%;
+   text-align: left;
+  }
+ 
+ .right-controls {
+   width: 25%;
+   text-align: right;
+  }
+
+ .play-controls  {
+    a {
+      font-size: 20px;
+      opacity: .9;
+      vertical-align: middle;
+    }
+
+    .previous {
+      margin-right: 65px;
+      transition-property: opacity;
+      transition: all 400ms ease-in-out;
+    }
+
+    .play-pause { //Play button control is larger
+      font-size: 30px;
+      vertical-align: middle;
+    }
+
+    a:hover { //add hover to play controls
+      opacity: .2;
+      vertical-align: middle;
+    }
+ 
+    .play-pause {
+      margin-right: 60px;
+      transition: all 400ms ease-in-out; 
+    }
+
+    .next {
+      margin-right: 65px;
+      transition: all 400ms ease-in-out; 
+    }
+  }
+ 
+   .currently-playing {
+     width: 50%;
+     text-align: center;
+     position: relative;
+   
+      .song-name, .artist-name {
+       text-align: center;
+       font-size: 12px;
+       margin: 0;
+       position: absolute;
+       width: 100%;
+       font-weight: 300;
+      }
+
+      .song-name {
+        top: 20px;
+      }
+   
+      .artist-name {
+        bottom: 20px;
+      }
+  }
+
+  .queue-toggle {
+     display: inline-block;
+     margin-left: 75px;
+   
+    i {
+      font-size: 20px;
+    }
+  }
+   
+  .volume {
+     display: inline-block;
+   
+    i {
+       width: 40px;
+       font-size: 20px;
+       display: inline-block;
+       vertical-align: middle;
+    }
+
+    .seek-bar {
+       display: inline-block;
+        width: 100px;
+        vertical-align: middle;
+    }
+  }
+}
+
+.player-bar-control-group {
+  display: table-cell; //make layout behave similar to HTML table; so 3 sections stay aligned
+  vertical-align: middle;
+}
+
+.seek-control {
+   position: relative;
+ 
+    .current-time {
+     position: absolute;
+     top: 10px;
+    }
+ 
+    .total-time {
+     position: absolute;
+     right: 0;
+     top: 10px;
+     }
+}
+
+.seek-bar {
+   height: 5px;
+   background: rgba(255, 255, 255, 0.3);
+   border-radius: 2px;
+   position: relative;
+   cursor: pointer;
+ 
+    .fill {
+     background: white;
+     width: 36%;
+     height: 5px;
+     border-radius: 2px;
+    }
+ 
+    .thumb {
+     position: absolute;
+     height: 10px;
+     width: 10px;
+     background: white;
+     left: 36%;
+     margin-left: -5px;
+     top: 50%;
+     margin-top: -5px;
+     border-radius: 50%;
+     cursor: pointer;
+     transition: all 200ms ease-in-out; //we want to trasition all properties between normal
+     // and hover states //easing determines the rate of transition at diff points in time
+    }  
+
+    &.no-amimate {
+      .fill, .thumb {
+        transition: none;
+      }
+    }
+ 
+    &:hover .thumb {
+     width: 20px;
+     height: 20px;
+     margin-top: -10px;
+     margin-left: -10px;
+    }
+}
+ 
+ 
+
+
+
