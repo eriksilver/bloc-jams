@@ -7,7 +7,7 @@
      margin-top: 10px;
 
       p {
-      font-size: $base-font-size;
+      font-size: 16px;
       font-weight: 300;
       color: rgba(255, 255, 255, 0.6);
 
@@ -57,7 +57,7 @@
     .collection-overlay-button {
       font-size: 20px;
       background-color: white;
-      color: $background-purple;
+      color: #5b5579;
       border-radius: 50% 50%; //curves the border of an element, defined by vertical
       // and horizontal amounts; in this case turns button elements from square to round
       display: inline-block;
@@ -68,7 +68,7 @@
     .collection-overlay-button:hover {
       cursor: pointer; //determines how mouse cursor should appear when hoving over selector
       color: white;
-      background-color: $background-purple;
+      background-color: #5b5579;
       }
   
     .collection-overlay-button i {

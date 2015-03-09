@@ -28,13 +28,13 @@
     }
 
     h5 {
-    font-size: $base-font-size;
+    font-size: 16px;
     font-weight: 500;
     }
 }
 
 //This styles our Song Listing
-.table.album-song-listing {
+.tle.album-song-listing {
   //Override the font for the entire table.
   font-weight: 300;
 
@@ -50,13 +50,13 @@
   text-align: center;
   font-size: 14px;
   background-color: white;
-  color: $background-purple;
+  color: #5b5579;
   border-radius: 50% 50%;
   display: inline-block;
   width: 28px;
   height: 28px;
 
-    &hover {
+    &:hover {
       cursor: pointer;
       color: white;
       background-color: #d2287b;

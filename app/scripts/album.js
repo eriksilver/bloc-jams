@@ -212,6 +212,7 @@ var setupSeekBars = function() {
     // wait until the HTML is fully processed
     $(document).ready(function() {
       changeAlbumView(albumPicasso);
+      console.log('page loaded');
       setupSeekBars();
     });
   }
