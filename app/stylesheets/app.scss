@@ -2,6 +2,8 @@
 @import "album";
 @import "collection";
 @import "player_bar";
+@import "buttons";
+@import "profile";
 
 //SASS Mixins & Variables
 @mixin backgroundRadial {
@@ -11,10 +13,6 @@
 
 // $background-purple: #5b5579 !global;
 // $base-font-size: 16px !global;
-
-/////
-
-
 
 html {
   height: 100%;
