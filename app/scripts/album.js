@@ -147,14 +147,14 @@ var albumMarconi = {
 //we'll use these to locate the mouse on Click, Mouseup, and Mousemove actions
 //our function below(updateSeek...) isnt a built in jQ function and Event is not passed automatically
 //We'll pass that argument explicitly when we call the function
- var updateSeekPercentage = function($seekBar, event) {
+var updateSeekPercentage = function($seekBar, event) {
    var barWidth = $seekBar.width();
    //uses 'offset()' to calc the offsetX as horizontal distance betw
    //the start of the seek-bar and the mouse's position
    var offsetX = event.pageX - $seekBar.offset().left;
  
   //we calc offsetXPercent as the distance of the click from the bar's left most point
-   var offsetXPercent = (offsetX  / barWidth) * 100;
+   var offsetXPercent = (offsetX / barWidth) * 100;
    offsetXPercent = Math.max(0, offsetXPercent); //returns largest of the 2 values
    offsetXPercent = Math.min(100, offsetXPercent); //return smallest of the 2 values
  
@@ -164,17 +164,16 @@ var albumMarconi = {
    $seekBar.find('.fill').width(percentageString); 
    //uses jQuery 'css' function to set the .thumb div's LEFT attribute to that percentage too
    $seekBar.find('.thumb').css({left: percentageString});
-  }
+};
 
 //function to attach our seek bar updates to mouse events on the bars
 //Step 1 is a mouse click on either bar; this should call updateSeekPercentage, 
 // with the clicked bar as a first argument and the clicked event as the second
 var setupSeekBars = function() {
- 
    $seekBars = $('.player-bar .seek-bar');//can bind both bars in one function
    $seekBars.click(function(event) {
      updateSeekPercentage($(this), event);
-   });
+    });
 
   //the dragging function begins when a user clicks and holds the mouse a 'mousedown' event 
   $seekBars.find('.thumb').mousedown(function(event) {
@@ -190,11 +189,12 @@ var setupSeekBars = function() {
     $(document).bind('mousemove.thumb', function(event){
       updateSeekPercentage($seekBar, event);
     });
+  
  
     //cleanup - release jQuery bindings on 'mouseup', 
     //detaching the functions we wrote from the events that called them
     //this way further mousemove or mouseup actions elswhere on page wont trigger thumb movement
-    $(document).bind('mouseup.thumb', function(){
+    $(document).bind('mouseup.thumb', function() {
       $seekBar.removeClass('no-animate'); //removes no animate - restoring it  
 
       $(document).unbind('mousemove.thumb');
@@ -211,7 +211,7 @@ var setupSeekBars = function() {
   if (document.URL.match(/\/album.html/)) {
     // wait until the HTML is fully processed
     $(document).ready(function() {
-      changeAlbumView(albumPicasso)
+      changeAlbumView(albumPicasso);
       setupSeekBars();
     });
   }
