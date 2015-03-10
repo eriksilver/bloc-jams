@@ -4,15 +4,12 @@
 @import "player_bar";
 @import "buttons";
 @import "profile";
+@import "mixins_variables";
 
-//SASS Mixins & Variables
 @mixin backgroundRadial {
   background: -webkit-radial-gradient( #2b1339, #380c77);
   background: radial-gradient( #2b1339, #380c77);
 }
-
-// $background-purple: #5b5579 !global;
-// $base-font-size: 16px !global;
 
 html {
   height: 100%;
@@ -39,7 +36,6 @@ body.landing {
   background: #5b5579;
   padding-bottom: 0; //we don't want player bar on landing page; so we don't want the 150px padding
 }
-
 
 
 //medium-purple: #7B46a3 - 123, 70, 163
