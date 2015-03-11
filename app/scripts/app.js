@@ -1,40 +1,30 @@
+//Example Album /created as an object 
+//To Angularize our album collection logic, we'll be populating album data
+// from our controller.
+var albumPicasso = {
+  name: 'The Colors',
+  artist: 'Pablo Picasso',
+  label: 'Cubism',
+  year: '1881',
+  albumArtUrl: '/images/album-placeholder.png',
+  songs: [
+     { name: 'Blue', length: '4:26' },
+     { name: 'Green', length: '3:14'},
+     { name: 'Red', length: '5:01' },
+     { name: 'Pink', length: '3:21'},
+     { name: 'Magenta', length: '2:15'}
+      ]
+};
+
+
+
+// prior commands for jQuery
 // require("./landing");
 // require('./collection');
 // require('./album');
 // require('./profile');
 
-
-//This is the Angular Landing Controller
-
-// angular: the JavaScript object that contains the entire angular library.
-
-// angular.module: a function that returns an angular app object. 
-// Since we're passing it "BlocJams", it'll return the app object for our "BlocJams" app 
-// as declared in our HTML. This will be useful when we have multiple apps, 
-// but it's just boilerplate for now. 
-
-// The second argument to .module is a list of dependencies or libraries to include
-// into our app. We don't have any yet, so we'll leave it as an empty array.
-
-//angular.module('BlocJams', []).controller: the .controller function allows 
-// us to initialize a controller. 
-// The second argument we pass to it is an array. 
-// The last element of the array is the callback function that is executed 
-// when our controller is initialized.
-
-
-//How it works:
-// When app.js runs, we're defining our Landing.controller. 
-//After that, Angular will read over our HTML in index.html, 
-//see the ng-controller='Landing.controller' attribute, 
-//and execute the callback to initialize our controller.
-
-// In the Landing controller we've passed in a $scope object to our callback. 
-// The $scope object is what connects the code in our controller and the HTML view. 
-// We can attach variables, functions or other data to our $scope in the controller, 
-// and then access them back in our view.
-
-//Ui-router replaced this
+//Ui-router replaced prior Angular code
 
  // Notes on ui-router: ui-router manages views using states which are triggered by 
  // attaching a ui-sref attribute (short for "ui state reference") to an <a> tag 
@@ -46,13 +36,10 @@
 //To make sure our providers can be used throughout the entirety of the Angular app,
 // we need to inject them using the .config() method on our app's module.
 
+blocJams = angular.module('BlocJams', ['ui.router']);
 
- 
-
-  blocJams = angular.module('BlocJams', ['ui.router']);
-
-  blocJams.config(['$stateProvider', '$locationProvider', function($stateProvider, $locationProvider) {
-  $locationProvider.html5Mode(true); //configure states to match plain routes
+blocJams.config(['$stateProvider', '$locationProvider', function($stateProvider, $locationProvider) {
+$locationProvider.html5Mode(true); //configure states to match plain routes
  
   //configures state definitions using ui-router
   //state method takes 2 arguments, 1) name of the state string 'landing'
@@ -67,7 +54,16 @@
      controller: 'Landing.controller',
      templateUrl: '/templates/landing.html'
    });
- }]);
+
+
+  //We need to add a $stateProvider configuration to work with our new
+  // album collection view and collection controller. 
+   $stateProvider.state('collection', {
+     url: '/collection',
+     controller: 'Collection.controller',
+     templateUrl: '/templates/collection.html'
+   });
+}]);
 
   // This is a cleaner way to call the controller than crowding
   // it on the module definition.
@@ -100,5 +96,16 @@
      '/images/album-placeholders/album-9.jpg',
    ];
 
+ }]);
 
+//To Angularize our album collection logic, we'll be populating album data 
+//from our controller.
+//To generate the data for our collection, we'll use a for loop in our controller.
+// We'll use angular.copy to make 33 copies of albumPicasso 
+//and push them to the $scope.albums array in the for loop.
+ blocJams.controller('Collection.controller', ['$scope', function($scope) {
+   $scope.albums = [];
+    for (var i = 0; i < 33; i++) {
+     $scope.albums.push(angular.copy(albumPicasso));
+   }
  }]);

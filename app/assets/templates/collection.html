@@ -1,0 +1,34 @@
+ 
+<!-- To use the collection view with ui router, we'll need to move the markup from the app/collection.html to the templates folder, to the new file collection.html  We'll also need to update the view to use an ngRepeat to display all of our generated albums. -->
+ <div class="collection-container container">
+   <div class="row"> <!-- Album Header -->
+     <div ng-repeat="album in albums" class="collection-album-container col-md-2">
+      <!-- To replicate the hover overlay in Angular, we'll use the ngMouseenter and ngMouseleave directives to handle the hover event. To toggle visibility, we'll use ngShow. 
+      When a mouse cursor enters our album images, ngMouseenter will trigger an expression that evaluates to true, showing the overlay, and when the cursor leaves the image, ngMouseleave will evaluate the expression to false.-->
+      <div ng-init="showOverlay = true" ng-mouseenter="showOverlay = false" ng-mouseleave="showOverlay = true" class="collection-album-image-container">
+        <img ng-src="{{ album.albumArtUrl }}">
+        <div class="collection-album-image-overlay" ng-hide="showOverlay" >
+          <div class="collection-overlay-content">
+            <a class="collection-overlay-button" ui-sref="album"> <!-- state reference to album -->
+              <i class="fa fa-play"></i>
+            </a>
+            &nbsp;
+            <a class="collection-overlay-button">
+              <i class="fa fa-plus"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+         <div class="collection-album-info caption">
+         <p>
+         <a class="album-name" ui-sref="album"> {{ album.name }} </a>
+           <br/>
+           <a ui-sref="album"> {{ album.artist }} </a>
+           <br/>
+           {{ album.songs.length }} songs
+           <br/>
+         </p>
+       </div>
+     </div>
+   </div>
+ </div>
