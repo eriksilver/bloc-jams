@@ -63,6 +63,13 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
      controller: 'Collection.controller',
      templateUrl: '/templates/collection.html'
    });
+
+   //album route, associated with proper url, template, and controller
+   $stateProvider.state('album', {
+     url: '/album',
+     templateUrl: '/templates/album.html',
+     controller: 'Album.controller'
+   });
 }]);
 
   // This is a cleaner way to call the controller than crowding
@@ -103,9 +110,55 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
 //To generate the data for our collection, we'll use a for loop in our controller.
 // We'll use angular.copy to make 33 copies of albumPicasso 
 //and push them to the $scope.albums array in the for loop.
- blocJams.controller('Collection.controller', ['$scope', function($scope) {
-   $scope.albums = [];
-    for (var i = 0; i < 33; i++) {
-     $scope.albums.push(angular.copy(albumPicasso));
+blocJams.controller('Collection.controller', ['$scope', function($scope) {
+ $scope.albums = [];
+  for (var i = 0; i < 33; i++) {
+   $scope.albums.push(angular.copy(albumPicasso));
+ }
+}]);
+
+//album controller, initialize $scope.album by copying albumPicasso
+blocJams.controller('Album.controller', ['$scope', function($scope) {
+ $scope.album = angular.copy(albumPicasso);
+
+ //Both functions take an argument of a song (an ng-repeated variable
+ // passed in from the view), and set the hoveredSong variable accordingly.
+  var hoveredSong = null;
+  var playingSong = null;
+ 
+  $scope.onHoverSong = function(song) {
+     hoveredSong = song;
+  };
+ 
+  $scope.offHoverSong = function(song) {
+     hoveredSong = null;
+  };
+
+  //this function attaches the hover state of a row (hoveredSong from above) 
+  // to the $scope so we can access it in the view
+  // it also takes into account whether the song is playing
+  //While repeating over our song list, we can call this function on each row 
+  // to determine its hover state. It compares the song being looped over to 
+  // the hoveredSong variable in our controller, and returns a song-state string. 
+  // In our view, we can control what is visible based on the string returned.
+  $scope.getSongState = function(song) {
+   if (song === playingSong) {
+     return 'playing';
    }
- }]);
+   else if (song === hoveredSong) {
+     return 'hovered';
+   }
+   return 'default';
+  };
+
+  //Adds the ability to play and pause the album songs by adding two methods 
+  // to our controller that we'll call using an ng-click directive.
+  $scope.playSong = function(song) {
+      playingSong = song;
+  };
+ 
+  $scope.pauseSong = function(song) {
+      playingSong = null;
+  };
+
+}]);

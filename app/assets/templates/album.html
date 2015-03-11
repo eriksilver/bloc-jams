@@ -1,0 +1,46 @@
+<!-- This view requires an ng-controller set up, and that that controller has an album object attached to its $scope, with all the relevant attributes. -->
+<div class='album-container container'>
+ <div class='album-header-container row'> <!-- Album Header -->
+   <div class='col-md-3'> <!-- Album Image -->
+     <img ng-src="{{ album.albumArtUrl}}" />
+   </div>
+
+   <div class='album-header-information col-md-8 col-md-push-1'> <!-- Album Information -->
+     <h3 class='album-title'> {{ album.name }}</h3>
+     <h4 class='album-artist'> {{ album.artist }} </h4>
+     <h5 class='album-meta-info'> {{ album.year }} on {{ album.label }} </h5>
+   </div>
+ </div>
+
+ <div class='row'> <!-- Song table -->
+   <table class='album-song-listing table'>
+      <!-- Using ng-repeat to add table rows directly to the view 
+        Note $index is automatically defined by Angular as part of
+        ng-repeat. It keeps track of which element is being looped over
+        in the repeated array by its index in the array-->
+       <!--  With Angular, we declare in the view exactly which methods will be called and on which events. In this case, we bind the onHoverSong function to the ng-mouseenter event (triggered when a mouse enters this tr), and the offHoverSong function to the ng-mouseleave event. -->
+      <tr ng-repeat="song in album.songs" ng-mouseenter="onHoverSong(song)" ng-mouseLeaves="offHoverSong(song)">
+         <td class="song-number col-md-1">
+          <!-- Uses ng-switch directive. In this view, we've "switched on" song state. If the state is "playing", we display the pause button. If it's "hovered", we display the play button. If neither, we'll show the song number. -->
+           <span ng-switch="getSongState(song)">
+             <span ng-switch-when="playing">
+               <a class="album-song-button" ng-click="pauseSong(song)">
+                 <i class="fa fa-pause"></i>
+               </a>
+             </span>
+             <span ng-switch-when="hovered">
+               <a class="album-song-button" ng-click="playSong(song)">
+                 <i class="fa fa-play"></i>
+               </a>
+             </span>
+             <span ng-switch-default>
+               {{ $index + 1 }}
+             </span>
+           </span>
+         <td>
+        <td class="col-md-9"> {{ song.name }} </td>
+        <td class="col-md-2"> {{ song.length }} </td>
+      </tr>
+   </table>
+ </div>
+</div>
