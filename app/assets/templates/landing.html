@@ -1,0 +1,46 @@
+ 
+     <div class ='hero-content'><!-- Hero content -->
+      <div class='container'>
+      <h1> Bloc Jams </h1>
+     <!--  The {{ }} are the very basics of what is called data-binding in Angular. It's a way for us to say: "replace whatever is between the curly braces with the value of that variable from the controller". 
+      Ng-click is an Angular directive to do something on a click event
+      This says, when we click on h3 tag, we want to run subTextClicked function
+      Angular will look for that function on $scope-->
+      <h3 ng-click="subTextClicked()"> {{ subText }} </h3>
+      </div>
+    </div>
+
+    
+
+      <div class='selling-points container'><!-- Selling points --> 
+        <div class="row"></div>
+
+          <div class="point col-md-4">
+          <h5> Choose your music</h5>
+          <p> The world is full of music; why should you have to listen to music that someone else chooses?
+          </p>
+          </div>
+
+          <div class="point col-md-4">
+          <h5> Unlimited, streaming, ad-free. </h5>
+          <p> No arbitrary limits. No distractions. </p>
+          </div>
+
+          <div class="point col-md-4">
+          <h5>Mobile enabled</h5>
+          <p>Listen to your music on the go. This streaming service is available on all mobile platforms.
+          </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 'ng-repeat' is a directive repeat over every object in the albumURLs array using similar JS syntax to the 'for object in objects'
+      'ng-src' is a directive to populate image tags with dynamic data
+      determined by the objects in our controller -->
+      <div class="landing-album-list container">
+       <div class="row">
+         <div class="col-md-4" ng-repeat="albumURL in albumURLs">
+           <img ng-src="{{albumURL}}">
+         </div>
+       </div>
+     </div>
