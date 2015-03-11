@@ -1,7 +1,7 @@
  
      <div class ='hero-content'><!-- Hero content -->
       <div class='container'>
-      <h1> Bloc Jams </h1>
+      <h1 ng-click="headingTextClicked()"> {{ headingText }} </h1>
      <!--  The {{ }} are the very basics of what is called data-binding in Angular. It's a way for us to say: "replace whatever is between the curly braces with the value of that variable from the controller". 
       Ng-click is an Angular directive to do something on a click event
       This says, when we click on h3 tag, we want to run subTextClicked function

@@ -24,7 +24,9 @@ var albumPicasso = {
 // require('./album');
 // require('./profile');
 
+
 //Ui-router replaced prior Angular code
+
 
  // Notes on ui-router: ui-router manages views using states which are triggered by 
  // attaching a ui-sref attribute (short for "ui state reference") to an <a> tag 
@@ -78,12 +80,13 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
 
  blocJams.controller('Landing.controller', ['$scope', function($scope) {
   $scope.subText = "Turn the music up!";
+  $scope.headingText = "Bloc Jammmms";
 
   $scope.subTextClicked = function() {
     $scope.subText += '!'; //Adds ! to our subText variable
     //because of data binding btw the subText variable and the page output,
     //when variable changes, it will update the output
-   };
+   }
 
    //this is an array placeholder of album images held in our images directory
    //we'll tell Angular to iterate over this array and display the albums
@@ -162,3 +165,4 @@ blocJams.controller('Album.controller', ['$scope', function($scope) {
   };
 
 }]);
+
