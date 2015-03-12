@@ -166,3 +166,15 @@ blocJams.controller('Album.controller', ['$scope', function($scope) {
 
 }]);
 
+     //addl challenge to add album shuffle on clicking "Bloc Jams" headingText
+     //headingTextClicked is in Templates > Landing.html
+    $scope.headingTextClicked = function () {
+      function shuffle(o){ //v1.0
+          for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+          return o;
+      };
+      //shuffle album images
+      $scope.albumURLs = shuffle($scope.albumURLs);
+    }
+
+
