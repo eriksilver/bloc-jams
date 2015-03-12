@@ -80,7 +80,7 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
 
  blocJams.controller('Landing.controller', ['$scope', function($scope) {
   $scope.subText = "Turn the music up!";
-  $scope.headingText = "Bloc Jammmms";
+  $scope.headingText = "Bloc Jams (click to shuffle)";
 
   $scope.subTextClicked = function() {
     $scope.subText += '!'; //Adds ! to our subText variable
