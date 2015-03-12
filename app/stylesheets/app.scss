@@ -33,7 +33,7 @@ body {
 // }
 
 body.landing {
-  background: #5b5579;
+  background: $background-purple;
   padding-bottom: 0; //we don't want player bar on landing page; so we don't want the 150px padding
 }
 
