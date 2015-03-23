@@ -195,21 +195,21 @@ blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($s
   $scope.songPlayer = SongPlayer;
 }]);
  
- blocJams.service('SongPlayer', function() {
-   return {
-     currentSong: null,
-     currentAlbum: null,
-     playing: false,
- 
-     play: function() {
-       this.playing = true;
-     },
-     pause: function() {
-       this.playing = false;
-     },
-     setSong: function(album, song) {
-       this.currentAlbum = album;
-       this.currentSong = song;
-     }
-   };
- });
+blocJams.service('SongPlayer', function() {
+ return {
+   currentSong: null,
+   currentAlbum: null,
+   playing: false,
+
+   play: function() {
+     this.playing = true;
+   },
+   pause: function() {
+     this.playing = false;
+   },
+   setSong: function(album, song) {
+     this.currentAlbum = album;
+     this.currentSong = song;
+   }
+ };
+});
