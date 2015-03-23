@@ -121,13 +121,13 @@ blocJams.controller('Collection.controller', ['$scope', function($scope) {
 }]);
 
 //album controller, initialize $scope.album by copying albumPicasso
-blocJams.controller('Album.controller', ['$scope', function($scope) {
+//also injects SongPlayer service so we can use it in Album.controller
+blocJams.controller('Album.controller', ['$scope', 'SongPlayer', function($scope, SongPlayer) {
  $scope.album = angular.copy(albumPicasso);
 
  //Both functions take an argument of a song (an ng-repeated variable
  // passed in from the view), and set the hoveredSong variable accordingly.
   var hoveredSong = null;
-  var playingSong = null;
  
   $scope.onHoverSong = function(song) {
      hoveredSong = song;
@@ -144,8 +144,9 @@ blocJams.controller('Album.controller', ['$scope', function($scope) {
   // to determine its hover state. It compares the song being looped over to 
   // the hoveredSong variable in our controller, and returns a song-state string. 
   // In our view, we can control what is visible based on the string returned.
+  //Now playSong and pauseSong functions can be shared among a number of pages
   $scope.getSongState = function(song) {
-   if (song === playingSong) {
+   if (song === SongPlayer.currentSong && SongPlayer.playing) {
      return 'playing';
    }
    else if (song === hoveredSong) {
@@ -156,15 +157,16 @@ blocJams.controller('Album.controller', ['$scope', function($scope) {
 
   //Adds the ability to play and pause the album songs by adding two methods 
   // to our controller that we'll call using an ng-click directive.
+  //Note how playSong function both sets the service to playing AND
+  //uses the setSong function to give it a currentSong object
   $scope.playSong = function(song) {
-      playingSong = song;
+      SongPlayer.setSong($scope.album, song);
+      SongPlayer.play();
   };
  
   $scope.pauseSong = function(song) {
-      playingSong = null;
+      SongPlayer.pause();
   };
-
-}]);
 
      //addl challenge to add album shuffle on clicking "Bloc Jams" headingText
      //headingTextClicked is in Templates > Landing.html
@@ -175,6 +177,39 @@ blocJams.controller('Album.controller', ['$scope', function($scope) {
       };
       //shuffle album images
       $scope.albumURLs = shuffle($scope.albumURLs);
-    }
+    };
 
 
+}]);
+
+
+//The player-bar should be an object which shares functionality and data among
+// a number of pages. The Angular framework provides services for this purpose.
+// A service is defined with its own encapsulated functionality; it can then 
+//be injected as a dependency into Angular controllers that need access to it.
+//As with our controllers, we define services in their containing module
+
+//The player-bar controller code is brief but gives our player-bar template
+// access to the shared SongPlayer object, allowing us to make powerful changes
+blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($scope, SongPlayer) {
+  $scope.songPlayer = SongPlayer;
+}]);
+ 
+ blocJams.service('SongPlayer', function() {
+   return {
+     currentSong: null,
+     currentAlbum: null,
+     playing: false,
+ 
+     play: function() {
+       this.playing = true;
+     },
+     pause: function() {
+       this.playing = false;
+     },
+     setSong: function(album, song) {
+       this.currentAlbum = album;
+       this.currentSong = song;
+     }
+   };
+ });
