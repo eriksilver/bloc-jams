@@ -277,3 +277,54 @@ blocJams.service('SongPlayer', function() {
    }
  };
 });
+
+//turned song and volume seek bars into, slider; a custom directive
+//custom directives go within their own folder within the templates folder
+//Angular will look for 'slider' in the HTML to call this directive
+//r
+blocJams.directive('slider', function(){
+
+  //jQuery for slider bar movement
+  var updateSeekPercentage = function($seekBar, event) {
+   var barWidth = $seekBar.width();
+   var offsetX =  event.pageX - $seekBar.offset().left;
+
+   var offsetXPercent = (offsetX  / $seekBar.width()) * 100;
+   offsetXPercent = Math.max(0, offsetXPercent);
+   offsetXPercent = Math.min(100, offsetXPercent);
+
+   var percentageString = offsetXPercent + '%';
+   $seekBar.find('.fill').width(percentageString);
+   $seekBar.find('.thumb').css({left: percentageString});
+ }
+  
+ return {
+   templateUrl: '/templates/directives/slider.html', //the path to an HTML template
+   replace: true, //replace the <slider> element with the directive's HTML rather than insert it
+   restrict: 'E', //instructs to treat as an element, <slider>; e.g. wont run on <div slider>
+   //link is ng function for DOM manip & logic
+   link: function(scope, element, attributes) { 
+    var $seekBar = $(element);
+
+    $seekBar.click(function(event) {
+      updateSeekPercentage($seekBar, event);
+    });
+
+    $seekBar.find('.thumb').mousedown(function(event){
+      $seekBar.addClass('no-animate');
+
+      $(document).bind('mousemove.thumb', function(event){
+        updateSeekPercentage($seekBar, event);
+      });
+
+      //cleanup
+      $(document).bind('mouseup.thumb', function(){
+        $seekBar.removeClass('no-animate');
+        $(document).unbind('mousemove.thumb');
+        $(document).unbind('mouseup.thumb');
+      });
+     });
+    }
+
+ };
+});
