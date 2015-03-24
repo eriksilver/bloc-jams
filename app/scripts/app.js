@@ -8,11 +8,11 @@ var albumPicasso = {
   year: '1881',
   albumArtUrl: '/images/album-placeholder.png',
   songs: [
-     { name: 'Blue', length: '4:26' },
-     { name: 'Green', length: '3:14'},
-     { name: 'Red', length: '5:01' },
-     { name: 'Pink', length: '3:21'},
-     { name: 'Magenta', length: '2:15'}
+       { name: 'Blue', length: '4:26', audioUrl: '/music/placeholders/blue' },
+       { name: 'Green', length: '3:14', audioUrl: '/music/placeholders/green' },
+       { name: 'Red', length: '5:01', audioUrl: '/music/placeholders/red' },
+       { name: 'Pink', length: '3:21', audioUrl: '/music/placeholders/pink' },
+       { name: 'Magenta', length: '2:15', audioUrl: '/music/placeholders/magenta' }
       ]
 };
 
@@ -113,10 +113,14 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
 //To generate the data for our collection, we'll use a for loop in our controller.
 // We'll use angular.copy to make 33 copies of albumPicasso 
 //and push them to the $scope.albums array in the for loop.
-blocJams.controller('Collection.controller', ['$scope', function($scope) {
+blocJams.controller('Collection.controller', ['$scope','SongPlayer', function($scope, SongPlayer) {
  $scope.albums = [];
   for (var i = 0; i < 33; i++) {
    $scope.albums.push(angular.copy(albumPicasso));
+ }
+
+  $scope.playAlbum = function(album){
+     SongPlayer.setSong(album, album.songs[0]); // Targets first song in the array.
  }
 }]);
 
@@ -161,7 +165,6 @@ blocJams.controller('Album.controller', ['$scope', 'SongPlayer', function($scope
   //uses the setSong function to give it a currentSong object
   $scope.playSong = function(song) {
       SongPlayer.setSong($scope.album, song);
-      SongPlayer.play();
   };
  
   $scope.pauseSong = function(song) {
@@ -196,12 +199,17 @@ blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($s
 }]);
  
 blocJams.service('SongPlayer', function() {
+ //To integrate buzz's audio controls with our SongPlayer service, 
+ //We'll declare a variable called currentSoundFile and set it to null. 
+ //We can then update that variable by redefining our setSong method in SongPlayer.
+ var currentSoundFile = null;
+
  //method to calculate the trackIndex of a song within an album
  //trackIndex function receives an album and a song and uses the JS
  //indexOf function to determine the song's location within the album
  //this is an internal or private method that doesn't need to be accessed
  //from outside the service, we so dont return it with the rest of the
- //SongPlayer object
+ //SongPlayer object 
  var trackIndex = function(album, song) {
      return album.songs.indexOf(song);
  }; 
@@ -213,9 +221,11 @@ blocJams.service('SongPlayer', function() {
 
    play: function() {
      this.playing = true;
+     currentSoundFile.play(); //.play is a method of Buzz
    },
    pause: function() {
      this.playing = false;
+     currentSoundFile.pause(); //.pause is a method of Buzz
    },
 
    //The next function should grab the index of the currently playing song 
@@ -228,7 +238,8 @@ blocJams.service('SongPlayer', function() {
      if (currentTrackIndex >= this.currentAlbum.songs.length) {
        currentTrackIndex = 0;
      }
-     this.currentSong = this.currentAlbum.songs[currentTrackIndex];
+     var song = this.currentAlbum.songs[currentTrackIndex];
+     this.setSong(this.currentAlbum, song);
    },
 
    previous: function() {
@@ -237,12 +248,32 @@ blocJams.service('SongPlayer', function() {
      if (currentTrackIndex < 0) {
        currentTrackIndex = this.currentAlbum.songs.length - 1;
      }
-     this.currentSong = this.currentAlbum.songs[currentTrackIndex];
+      var song = this.currentAlbum.songs[currentTrackIndex];
+      this.setSong(this.currentAlbum, song);
    },
 
+   //setSong() still takes the same arguments, but our song objects now have something
+   // that Buzz can work with. We add a conditional to the beginning that stops the 
+   //current song if one is playing (this prevents multiple songs playing at once). 
+   //We set currentSoundFile to the new song, passing in the audio url that we want to 
+   //play, and a second argument that is an object that sets attributes in our 
+   //<audio> tag that are required to play the song. The first property of this object 
+   //is an array of acceptable formats for our audio file, and the second, preload, 
+   //ensures that the file is preloaded before we attempt to play it.
    setSong: function(album, song) {
-     this.currentAlbum = album;
-     this.currentSong = song;
+    if (currentSoundFile) {
+      currentSoundFile.stop();
+    }
+
+    this.currentAlbum = album;
+    this.currentSong = song;
+
+    currentSoundFile = new buzz.sound(song.audioUrl, {
+      formats: [ "mp3" ],
+      preload: true
+    });
+ 
+    this.play();
    }
  };
 });
