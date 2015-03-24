@@ -4,17 +4,21 @@
      <div ng-controller="PlayerBar.controller" class='player-bar'>
      <div class='container'>
        <div class='play-controls player-bar-control-group left-controls'>
-         <a class='previous'>
+         <a class='previous' ng-click="songPlayer.previous()">
            <i class='fa fa-backward'></i>
          </a>
          <a class='play-pause'>
             <!--Because $scope.songPlayer object is associated with a song object
             we can vary the appearance and function of the player-bar options
-            based on the status-playing or not-of the currently playing song -->
+            based on the status-playing or not-of the currently playing song 
+            
+            The Previous and Next buuttons call functions on the scope's songPlayer object when the buttons are clicked. We'll add these
+            buttons to the SongPlayer service.
+          -->
             <i class='fa fa-play' ng-show="!songPlayer.playing" ng-click="songPlayer.play()"></i>
             <i class='fa fa-pause' ng-show="songPlayer.playing" ng-click="songPlayer.pause()"></i>
          </a>
-         <a class='next'>
+         <a class='next' ng-click='songPlayer.next()'>
             <i class='fa fa-forward'></i>
          </a>
        </div>

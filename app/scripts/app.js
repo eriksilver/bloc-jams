@@ -196,6 +196,16 @@ blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($s
 }]);
  
 blocJams.service('SongPlayer', function() {
+ //method to calculate the trackIndex of a song within an album
+ //trackIndex function receives an album and a song and uses the JS
+ //indexOf function to determine the song's location within the album
+ //this is an internal or private method that doesn't need to be accessed
+ //from outside the service, we so dont return it with the rest of the
+ //SongPlayer object
+ var trackIndex = function(album, song) {
+     return album.songs.indexOf(song);
+ }; 
+ 
  return {
    currentSong: null,
    currentAlbum: null,
@@ -207,6 +217,29 @@ blocJams.service('SongPlayer', function() {
    pause: function() {
      this.playing = false;
    },
+
+   //The next function should grab the index of the currently playing song 
+   //and determine what the next track is. If the current song isn't the
+   //last one, that's just the song with the next index. If it is the last
+   // song, we should restart the album at the song with index 0.
+   next: function() {
+     var currentTrackIndex = trackIndex(this.currentAlbum, this.currentSong);
+     currentTrackIndex++;
+     if (currentTrackIndex >= this.currentAlbum.songs.length) {
+       currentTrackIndex = 0;
+     }
+     this.currentSong = this.currentAlbum.songs[currentTrackIndex];
+   },
+
+   previous: function() {
+     var currentTrackIndex = trackIndex(this.currentAlbum, this.currentSong);
+     currentTrackIndex--;
+     if (currentTrackIndex < 0) {
+       currentTrackIndex = this.currentAlbum.songs.length - 1;
+     }
+     this.currentSong = this.currentAlbum.songs[currentTrackIndex];
+   },
+
    setSong: function(album, song) {
      this.currentAlbum = album;
      this.currentSong = song;
