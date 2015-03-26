@@ -8,11 +8,11 @@ var albumPicasso = {
   year: '1881',
   albumArtUrl: '/images/album-placeholder.png',
   songs: [
-       { name: 'Blue', length: '4:26', audioUrl: '/music/placeholders/blue' },
-       { name: 'Green', length: '3:14', audioUrl: '/music/placeholders/green' },
-       { name: 'Red', length: '5:01', audioUrl: '/music/placeholders/red' },
-       { name: 'Pink', length: '3:21', audioUrl: '/music/placeholders/pink' },
-       { name: 'Magenta', length: '2:15', audioUrl: '/music/placeholders/magenta' }
+          { name: 'Blue', length: 163.38, audioUrl: '/music/placeholders/blue' },
+          { name: 'Green', length: 105.66 , audioUrl: '/music/placeholders/green' },
+          { name: 'Red', length: 270.14, audioUrl: '/music/placeholders/red' },
+          { name: 'Pink', length: 154.81, audioUrl: '/music/placeholders/pink' },
+          { name: 'Magenta', length: 375.92, audioUrl: '/music/placeholders/magenta' }
       ]
 };
 
@@ -252,6 +252,14 @@ blocJams.service('SongPlayer', function() {
       this.setSong(this.currentAlbum, song);
    },
 
+   //adding seek method for SongPlayer
+   seek: function(time) {
+     // Checks to make sure that a sound file is playing before seeking.
+     if(currentSoundFile) {
+       // Uses a Buzz method to set the time of the song.
+       currentSoundFile.setTime(time);
+     }
+   },
    //setSong() still takes the same arguments, but our song objects now have something
    // that Buzz can work with. We add a conditional to the beginning that stops the 
    //current song if one is playing (this prevents multiple songs playing at once). 
@@ -306,68 +314,99 @@ blocJams.directive('slider', ['$document', function ($document){
   //  var percentageString = offsetXPercent + '%';
   //  $seekBar.find('.fill').width(percentageString);
   //  $seekBar.find('.thumb').css({left: percentageString});
-  
+ var numberFromValue = function(value, defaultValue) {
+   if (typeof value === 'number') {
+     return value;
+   }
+
+   if(typeof value === 'undefined') {
+     return defaultValue;
+   }
+
+   if(typeof value === 'string') {
+     return Number(value);
+   }
+ }
+
  return {
    templateUrl: '/templates/directives/slider.html', //the path to an HTML template
    replace: true, //replace the <slider> element with the directive's HTML rather than insert it
    restrict: 'E', //instructs to treat as an element, <slider>; e.g. wont run on <div slider>
-   scope: {},     //creates a scope that exists only in this directive
-   //link is ng function for DOM manip & logic
-   link: function(scope, element, attributes) { 
-    // These values represent the progress into the song/volume bar, and its max value.
-    // For now, we're supplying arbitrary initial and max values.
-    scope.value = 0;
-    scope.max = 200;
+   scope: {       //creates a scope that exists only in this directive
+      onChange: '&'
+   },     
+    //link is ng function for DOM manip & logic
+    link: function(scope, element, attributes) { 
+      // These values represent the progress into the song/volume bar, and its max value.
+      // For now, we're supplying arbitrary initial and max values.
+      scope.value = 0;
+      scope.max = 100;
 
-    var $seekBar = $(element); 
+      var $seekBar = $(element); 
+      attributes.$observe('value', function(newValue) {
+        scope.value = numberFromValue(newValue, 0);
+      });
 
-    //New angular slider bar functionality
-    var percentString = function () {
-       var percent = Number(scope.value) / Number(scope.max) * 100;
-       return percent + "%";
-     }
+      attributes.$observe('max', function(newValue) {
+        scope.max = numberFromValue(newValue, 100) || 100;
+      });
 
-     scope.fillStyle = function() {
-       return {width: percentString()};
-     }
+      //New angular slider bar functionality
+      var percentString = function () {
+        var value = scope.value || 0;
+        var max = scope.max || 100;
+        percent = value / max * 100;
+        return percent + "%";
+       }
 
-     scope.thumbStyle = function() {
-       return {left: percentString()};
-     }
+       scope.fillStyle = function() {
+         return {width: percentString()};
+       }
 
-    //JQuery seekbar funcationality - replaced by Angular
-    // $seekBar.click(function(event) {
-    //   updateSeekPercentage($seekBar, event);
-    // });
+       scope.thumbStyle = function() {
+         return {left: percentString()};
+       }
 
-    // $seekBar.find('.thumb').mousedown(function(event){
-    //   $seekBar.addClass('no-animate');
+      //JQuery seekbar funcationality - replaced by Angular
+      // $seekBar.click(function(event) {
+      //   updateSeekPercentage($seekBar, event);
+      // });
 
-    //   $(document).bind('mousemove.thumb', function(event){
-    //     updateSeekPercentage($seekBar, event);
-    //   });
+      // $seekBar.find('.thumb').mousedown(function(event){
+      //   $seekBar.addClass('no-animate');
 
-    //   //cleanup
-    //   $(document).bind('mouseup.thumb', function(){
-    //     $seekBar.removeClass('no-animate');
-    //     $(document).unbind('mousemove.thumb');
-    //     $(document).unbind('mouseup.thumb');
-    //   });
-    //  });
+      //   $(document).bind('mousemove.thumb', function(event){
+      //     updateSeekPercentage($seekBar, event);
+      //   });
+
+      //   //cleanup
+      //   $(document).bind('mouseup.thumb', function(){
+      //     $seekBar.removeClass('no-animate');
+      //     $(document).unbind('mousemove.thumb');
+      //     $(document).unbind('mouseup.thumb');
+      //   });
+      //  });
+      var notifyCallback = function(newValue) {
+        if(typeof scope.onChange === 'function') {
+           scope.onChange({value: newValue});
+        }
+      };
     }
   }
 
 scope.onClickSlider = function(event) {
   var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
   scope.value = percent * scope.max;
+  notifyCallback(scope.value);
 }
 
 scope.trackThumb = function() {
   $document.bind('mousemove.thumb', function(event){
-   var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
-   scope.$apply(function(){
-     scope.value = percent * scope.max;
-   });
+    var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
+    scope.$apply(function(){
+        scope.value = percent * scope.max;
+        notifyCallback(scope.value);
+    });
   });
 
   //cleanup
