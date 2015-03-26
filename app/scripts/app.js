@@ -281,102 +281,67 @@ blocJams.service('SongPlayer', function() {
 //turned song and volume seek bars into, slider; a custom directive
 //custom directives go within their own folder within the templates folder
 //Angular will look for 'slider' in the HTML to call this directive
-//r
-blocJams.directive('slider', ['$document', function ($document){
-   // Returns a number between 0 and 1 to determine where the mouse event happened along the slider bar.
-   var calculateSliderPercentFromMouseEvent = function($slider, event) {
-     var offsetX =  event.pageX - $slider.offset().left; // Distance from left
-     var sliderWidth = $slider.width(); // Width of slider
-     var offsetXPercent = (offsetX  / sliderWidth);
-     offsetXPercent = Math.max(0, offsetXPercent);
-     offsetXPercent = Math.min(1, offsetXPercent);
-     return offsetXPercent;
-   }
-
-
-  // //jQuery for slider bar movement - REPLACED by Angular slider directive
-  // var updateSeekPercentage = function($seekBar, event) {
-  //  var barWidth = $seekBar.width();
-  //  var offsetX =  event.pageX - $seekBar.offset().left;
-
-  //  var offsetXPercent = (offsetX  / $seekBar.width()) * 100;
-  //  offsetXPercent = Math.max(0, offsetXPercent);
-  //  offsetXPercent = Math.min(100, offsetXPercent);
-
-  //  var percentageString = offsetXPercent + '%';
-  //  $seekBar.find('.fill').width(percentageString);
-  //  $seekBar.find('.thumb').css({left: percentageString});
-  
- return {
-   templateUrl: '/templates/directives/slider.html', //the path to an HTML template
-   replace: true, //replace the <slider> element with the directive's HTML rather than insert it
-   restrict: 'E', //instructs to treat as an element, <slider>; e.g. wont run on <div slider>
-   scope: {},     //creates a scope that exists only in this directive
-   //link is ng function for DOM manip & logic
-   link: function(scope, element, attributes) { 
-    // These values represent the progress into the song/volume bar, and its max value.
-    // For now, we're supplying arbitrary initial and max values.
-    scope.value = 0;
-    scope.max = 200;
-
-    var $seekBar = $(element); 
-
-    //New angular slider bar functionality
-    var percentString = function () {
-       var percent = Number(scope.value) / Number(scope.max) * 100;
-       return percent + "%";
-     }
-
-     scope.fillStyle = function() {
-       return {width: percentString()};
-     }
-
-     scope.thumbStyle = function() {
-       return {left: percentString()};
-     }
-
-    //JQuery seekbar funcationality - replaced by Angular
-    // $seekBar.click(function(event) {
-    //   updateSeekPercentage($seekBar, event);
-    // });
-
-    // $seekBar.find('.thumb').mousedown(function(event){
-    //   $seekBar.addClass('no-animate');
-
-    //   $(document).bind('mousemove.thumb', function(event){
-    //     updateSeekPercentage($seekBar, event);
-    //   });
-
-    //   //cleanup
-    //   $(document).bind('mouseup.thumb', function(){
-    //     $seekBar.removeClass('no-animate');
-    //     $(document).unbind('mousemove.thumb');
-    //     $(document).unbind('mouseup.thumb');
-    //   });
-    //  });
+blocJams.directive('slider', ['$document', function ($document) {
+    // Returns a number between 0 and 1 to determine where the mouse event happened along the slider bar.
+    var calculateSliderPercentFromMouseEvent = function($slider, event) {
+       var offsetX =  event.pageX - $slider.offset().left; // Distance from left
+       var sliderWidth = $slider.width(); // Width of slider
+       var offsetXPercent = (offsetX  / sliderWidth);
+       offsetXPercent = Math.max(0, offsetXPercent);
+       offsetXPercent = Math.min(1, offsetXPercent);
+       return offsetXPercent;
     }
-  }
 
-scope.onClickSlider = function(event) {
-  var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
-  scope.value = percent * scope.max;
-}
+    return {
+       templateUrl: '/templates/directives/slider.html', //the path to an HTML template
+       replace: true, //replace the <slider> element with the directive's HTML rather than insert it
+       restrict: 'E', //instructs to treat as an element, <slider>; e.g. wont run on <div slider>
+       scope: {},     //creates a scope that exists only in this directive
+       //link is ng function for DOM manip & logic
+        link: function(scope, element, attributes) { 
+          // These values represent the progress into the song/volume bar, and its max value.
+          // For now, we're supplying arbitrary initial and max values.
+          scope.value = 0;
+          scope.max = 200;
 
-scope.trackThumb = function() {
-  $document.bind('mousemove.thumb', function(event){
-   var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
-   scope.$apply(function(){
-     scope.value = percent * scope.max;
-   });
-  });
+          var $seekBar = $(element); 
 
-  //cleanup
-  $document.bind('mouseup.thumb', function(){
-   $document.unbind('mousemove.thumb');
-   $document.unbind('mouseup.thumb');
-  });
-};
+          //New angular slider bar functionality
+          var percentString = function () {
+             var percent = Number(scope.value) / Number(scope.max) * 100;
+             return percent + "%";
+          }
 
+          scope.fillStyle = function() {
+             return {width: percentString()};
+          }
+
+          scope.thumbStyle = function() {
+             return {left: percentString()};
+          }
+        }
+    }
+
+    scope.onClickSlider = function(event) {
+      var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
+      scope.value = percent * scope.max;
+      console.log(percent);
+    }
+
+    scope.trackThumb = function() {
+      $document.bind('mousemove.thumb', function(event){
+        var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
+          scope.$apply(function(){
+           scope.value = percent * scope.max;
+          });
+      });
+
+      //cleanup
+      $document.bind('mouseup.thumb', function(){
+         $document.unbind('mousemove.thumb');
+         $document.unbind('mouseup.thumb');
+      });
+    };
 }]);
 
 
