@@ -8,11 +8,11 @@ var albumPicasso = {
   year: '1881',
   albumArtUrl: '/images/album-placeholder.png',
   songs: [
-       { name: 'Blue', length: '4:26', audioUrl: '/music/placeholders/blue' },
-       { name: 'Green', length: '3:14', audioUrl: '/music/placeholders/green' },
-       { name: 'Red', length: '5:01', audioUrl: '/music/placeholders/red' },
-       { name: 'Pink', length: '3:21', audioUrl: '/music/placeholders/pink' },
-       { name: 'Magenta', length: '2:15', audioUrl: '/music/placeholders/magenta' }
+          { name: 'Blue', length: 163.38, audioUrl: '/music/placeholders/blue' },
+          { name: 'Green', length: 105.66 , audioUrl: '/music/placeholders/green' },
+          { name: 'Red', length: 270.14, audioUrl: '/music/placeholders/red' },
+          { name: 'Pink', length: 154.81, audioUrl: '/music/placeholders/pink' },
+          { name: 'Magenta', length: 375.92, audioUrl: '/music/placeholders/magenta' }
       ]
 };
 
@@ -252,6 +252,14 @@ blocJams.service('SongPlayer', function() {
       this.setSong(this.currentAlbum, song);
    },
 
+   //adding seek method for SongPlayer
+   seek: function(time) {
+     // Checks to make sure that a sound file is playing before seeking.
+     if(currentSoundFile) {
+       // Uses a Buzz method to set the time of the song.
+       currentSoundFile.setTime(time);
+     }
+   },
    //setSong() still takes the same arguments, but our song objects now have something
    // that Buzz can work with. We add a conditional to the beginning that stops the 
    //current song if one is playing (this prevents multiple songs playing at once). 
@@ -281,6 +289,7 @@ blocJams.service('SongPlayer', function() {
 //turned song and volume seek bars into, slider; a custom directive
 //custom directives go within their own folder within the templates folder
 //Angular will look for 'slider' in the HTML to call this directive
+
 blocJams.directive('slider', ['$document', function ($document) {
     console.log("start of slider directive");
     // Returns a number between 0 and 1 to determine where the mouse event happened along the slider bar.
