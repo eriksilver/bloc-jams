@@ -282,6 +282,7 @@ blocJams.service('SongPlayer', function() {
 //custom directives go within their own folder within the templates folder
 //Angular will look for 'slider' in the HTML to call this directive
 blocJams.directive('slider', ['$document', function ($document) {
+    console.log("start of slider directive");
     // Returns a number between 0 and 1 to determine where the mouse event happened along the slider bar.
     var calculateSliderPercentFromMouseEvent = function($slider, event) {
        var offsetX =  event.pageX - $slider.offset().left; // Distance from left
@@ -289,7 +290,9 @@ blocJams.directive('slider', ['$document', function ($document) {
        var offsetXPercent = (offsetX  / sliderWidth);
        offsetXPercent = Math.max(0, offsetXPercent);
        offsetXPercent = Math.min(1, offsetXPercent);
+       console.log("this is offsetXPercent" + offsetXPercent);
        return offsetXPercent;
+
     }
 
     return {
@@ -299,11 +302,12 @@ blocJams.directive('slider', ['$document', function ($document) {
        scope: {},     //creates a scope that exists only in this directive
        //link is ng function for DOM manip & logic
         link: function(scope, element, attributes) { 
+          console.log("start of link function");
           // These values represent the progress into the song/volume bar, and its max value.
           // For now, we're supplying arbitrary initial and max values.
           scope.value = 0;
           scope.max = 200;
-
+            
           var $seekBar = $(element); 
 
           //New angular slider bar functionality
@@ -319,29 +323,31 @@ blocJams.directive('slider', ['$document', function ($document) {
           scope.thumbStyle = function() {
              return {left: percentString()};
           }
+          
+          scope.onClickSlider = function(event) {
+            console.log("start of onClickSlider function");
+            var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
+            scope.value = percent * scope.max;
+          }
+
+          scope.trackThumb = function() {
+            console.log("trackThumb function");
+            $document.bind('mousemove.thumb', function(event){
+              var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
+                scope.$apply(function(){
+                 scope.value = percent * scope.max;
+                });
+            });
+
+            //cleanup
+            $document.bind('mouseup.thumb', function(){
+               $document.unbind('mousemove.thumb');
+               $document.unbind('mouseup.thumb');
+            });
+          };
         }
     }
 
-    scope.onClickSlider = function(event) {
-      var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
-      scope.value = percent * scope.max;
-      console.log(percent);
-    }
-
-    scope.trackThumb = function() {
-      $document.bind('mousemove.thumb', function(event){
-        var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
-          scope.$apply(function(){
-           scope.value = percent * scope.max;
-          });
-      });
-
-      //cleanup
-      $document.bind('mouseup.thumb', function(){
-         $document.unbind('mousemove.thumb');
-         $document.unbind('mouseup.thumb');
-      });
-    };
 }]);
 
 
