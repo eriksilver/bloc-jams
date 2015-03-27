@@ -196,9 +196,19 @@ blocJams.controller('Album.controller', ['$scope', 'SongPlayer', function($scope
 // access to the shared SongPlayer object, allowing us to make powerful changes
 blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($scope, SongPlayer) {
   $scope.songPlayer = SongPlayer;
+
+  //onTimeUpdate will dynamically set the playTime as song progresses using the value attribute on the slider directive to {{playTime}}
+  //onTimeUpdate captures two events from the $broacast call - the event and the value (time of the song)
+  SongPlayer.onTimeUpdate(function(event, time){
+      $scope.$apply(function(){
+        $scope.playTime = time;
+      });
+  });
 }]);
- 
-blocJams.service('SongPlayer', function() {
+
+
+//using rootScope for playTime broadcast event so it can be used anywhere in app
+blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
  //To integrate buzz's audio controls with our SongPlayer service, 
  //We'll declare a variable called currentSoundFile and set it to null. 
  //We can then update that variable by redefining our setSong method in SongPlayer.
@@ -214,7 +224,7 @@ blocJams.service('SongPlayer', function() {
      return album.songs.indexOf(song);
  }; 
  
- return {
+  return {
    currentSong: null,
    currentAlbum: null,
    playing: false,
@@ -223,6 +233,7 @@ blocJams.service('SongPlayer', function() {
      this.playing = true;
      currentSoundFile.play(); //.play is a method of Buzz
    },
+
    pause: function() {
      this.playing = false;
      currentSoundFile.pause(); //.pause is a method of Buzz
@@ -259,7 +270,12 @@ blocJams.service('SongPlayer', function() {
        // Uses a Buzz method to set the time of the song.
        currentSoundFile.setTime(time);
      }
-   },
+    },
+    //onTimeUpdate method to execute callback on every time update
+    onTimeUpdate: function(callback) {
+      console.log('ontimeupdate called');
+      return $rootScope.$on('sound:timeupdate', callback);
+    },
    //setSong() still takes the same arguments, but our song objects now have something
    // that Buzz can work with. We add a conditional to the beginning that stops the 
    //current song if one is playing (this prevents multiple songs playing at once). 
@@ -268,23 +284,28 @@ blocJams.service('SongPlayer', function() {
    //<audio> tag that are required to play the song. The first property of this object 
    //is an array of acceptable formats for our audio file, and the second, preload, 
    //ensures that the file is preloaded before we attempt to play it.
-   setSong: function(album, song) {
-    if (currentSoundFile) {
-      currentSoundFile.stop();
+    setSong: function(album, song) {
+      if (currentSoundFile) {
+        currentSoundFile.stop();
+      }
+
+      this.currentAlbum = album;
+      this.currentSong = song;
+
+      currentSoundFile = new buzz.sound(song.audioUrl, {
+        formats: [ "mp3" ],
+        preload: true
+      });
+
+      currentSoundFile.bind('timeupdate', function(e) {
+        console.log('timeupdate binding');
+        $rootScope.$broadcast('sound:timeupdate', this.getTime());
+      });
+  
+      this.play();
     }
-
-    this.currentAlbum = album;
-    this.currentSong = song;
-
-    currentSoundFile = new buzz.sound(song.audioUrl, {
-      formats: [ "mp3" ],
-      preload: true
-    });
- 
-    this.play();
-   }
- };
-});
+  };
+}]);
 
 //turned song and volume seek bars into, slider; a custom directive
 //custom directives go within their own folder within the templates folder
@@ -292,6 +313,37 @@ blocJams.service('SongPlayer', function() {
 
 blocJams.directive('slider', ['$document', function ($document) {
     console.log("start of slider directive");
+    
+    // //a filter in Angular will format data; this formats song in seconds to normal length format
+    // blocJams.filter('timecode', function(){
+    //   console.log('start timecode filter');
+    //   return function(seconds) {
+    //      seconds = Number.parseFloat(seconds);
+     
+    //      // Returned when no time is provided.
+    //      if (Number.isNaN(seconds)) {
+    //        return '-:--';
+    //      }
+     
+    //      // make it a whole number
+    //      var wholeSeconds = Math.floor(seconds);
+     
+    //      var minutes = Math.floor(wholeSeconds / 60);
+     
+    //      remainingSeconds = wholeSeconds % 60;
+     
+    //      var output = minutes + ':';
+     
+    //       // zero pad seconds, so 9 seconds should be :09
+    //       if (remainingSeconds < 10) {
+    //         output += '0';
+    //       }
+     
+    //      output += remainingSeconds;
+    //      return output;
+    //   }
+    // })
+
     // Returns a number between 0 and 1 to determine where the mouse event happened along the slider bar.
     var calculateSliderPercentFromMouseEvent = function($slider, event) {
        var offsetX =  event.pageX - $slider.offset().left; // Distance from left
@@ -304,25 +356,51 @@ blocJams.directive('slider', ['$document', function ($document) {
 
     }
 
+    var numberFromValue = function(value, defaultValue) {
+       if (typeof value === 'number') {
+         return value;
+       }
+   
+       if(typeof value === 'undefined') {
+         return defaultValue;
+       }
+   
+       if(typeof value === 'string') {
+         return Number(value);
+       }
+    }
+ 
     return {
        templateUrl: '/templates/directives/slider.html', //the path to an HTML template
        replace: true, //replace the <slider> element with the directive's HTML rather than insert it
        restrict: 'E', //instructs to treat as an element, <slider>; e.g. wont run on <div slider>
-       scope: {},     //creates a scope that exists only in this directive
+       scope: {
+          onChange: '&'
+       },     //creates a scope that exists only in this directive
        //link is ng function for DOM manip & logic
         link: function(scope, element, attributes) { 
           console.log("start of link function");
           // These values represent the progress into the song/volume bar, and its max value.
           // For now, we're supplying arbitrary initial and max values.
           scope.value = 0;
-          scope.max = 200;
+          scope.max = 100;
             
           var $seekBar = $(element); 
 
+          attributes.$observe('value', function(newValue) {
+            scope.value = numberFromValue(newValue, 0);
+          });
+ 
+          attributes.$observe('max', function(newValue) {
+            scope.max = numberFromValue(newValue, 100) || 100;
+          });
+
           //New angular slider bar functionality
           var percentString = function () {
-             var percent = Number(scope.value) / Number(scope.max) * 100;
-             return percent + "%";
+            var value = scope.value || 0;
+            var max = scope.max || 100;
+            percent = value / max * 100;
+            return percent + "%";
           }
 
           scope.fillStyle = function() {
@@ -337,6 +415,7 @@ blocJams.directive('slider', ['$document', function ($document) {
             console.log("start of onClickSlider function");
             var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
             scope.value = percent * scope.max;
+            notifyCallback(scope.value);
           }
 
           scope.trackThumb = function() {
@@ -345,6 +424,7 @@ blocJams.directive('slider', ['$document', function ($document) {
               var percent = calculateSliderPercentFromMouseEvent($seekBar, event);
                 scope.$apply(function(){
                  scope.value = percent * scope.max;
+                 notifyCallback(scope.value); 
                 });
             });
 
@@ -353,6 +433,12 @@ blocJams.directive('slider', ['$document', function ($document) {
                $document.unbind('mousemove.thumb');
                $document.unbind('mouseup.thumb');
             });
+          };
+
+          var notifyCallback = function(newValue) {
+            if(typeof scope.onChange === 'function') {
+              scope.onChange({value: newValue});
+            }
           };
         }
     }
