@@ -197,6 +197,15 @@ blocJams.controller('Album.controller', ['$scope', 'SongPlayer', function($scope
 blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($scope, SongPlayer) {
   $scope.songPlayer = SongPlayer;
 
+  //this function returns a class name for the volume icon based on volume levels from the SongPlayer.volume property
+  $scope.volumeClass = function() {
+    return {
+       'fa-volume-off': SongPlayer.volume == 0,
+       'fa-volume-down': SongPlayer.volume <= 70 && SongPlayer.volume > 0,
+       'fa-volume-up': SongPlayer.volume > 70
+    }
+  }
+
   //onTimeUpdate will dynamically set the playTime as song progresses using the value attribute on the slider directive to {{playTime}}
   //onTimeUpdate captures two events from the $broacast call - the event and the value (time of the song)
   SongPlayer.onTimeUpdate(function(event, time){
@@ -228,6 +237,7 @@ blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
    currentSong: null,
    currentAlbum: null,
    playing: false,
+   volume: 90,
 
    play: function() {
      this.playing = true;
@@ -263,18 +273,26 @@ blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
       this.setSong(this.currentAlbum, song);
    },
 
-   //adding seek method for SongPlayer
-   seek: function(time) {
+    //onTimeUpdate method to execute callback on every time update
+    onTimeUpdate: function(callback) {
+      console.log('ontimeupdate called');
+      return $rootScope.$on('sound:timeupdate', callback);
+    },
+
+    //adding seek method for SongPlayer (this was above onTimeUpdate)
+    seek: function(time) {
      // Checks to make sure that a sound file is playing before seeking.
      if(currentSoundFile) {
        // Uses a Buzz method to set the time of the song.
        currentSoundFile.setTime(time);
      }
     },
-    //onTimeUpdate method to execute callback on every time update
-    onTimeUpdate: function(callback) {
-      console.log('ontimeupdate called');
-      return $rootScope.$on('sound:timeupdate', callback);
+
+    setVolume: function(volume) {
+      if(currentSoundFile){
+        currentSoundFile.setVolume(volume);
+      }
+      this.volume = volume;
     },
    //setSong() still takes the same arguments, but our song objects now have something
    // that Buzz can work with. We add a conditional to the beginning that stops the 
@@ -296,6 +314,8 @@ blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
         formats: [ "mp3" ],
         preload: true
       });
+
+      currentSoundFile.setVolume(this.volume);
 
       currentSoundFile.bind('timeupdate', function(e) {
         console.log('timeupdate binding');
