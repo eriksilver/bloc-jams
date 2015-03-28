@@ -334,35 +334,35 @@ blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
 blocJams.directive('slider', ['$document', function ($document) {
     console.log("start of slider directive");
     
-    // //a filter in Angular will format data; this formats song in seconds to normal length format
-    // blocJams.filter('timecode', function(){
-    //   console.log('start timecode filter');
-    //   return function(seconds) {
-    //      seconds = Number.parseFloat(seconds);
+    //a filter in Angular will format data; this formats song in seconds to normal length format
+    blocJams.filter('timecode', function(){
+      console.log('start timecode filter');
+      return function(seconds) {
+         seconds = Number.parseFloat(seconds);
      
-    //      // Returned when no time is provided.
-    //      if (Number.isNaN(seconds)) {
-    //        return '-:--';
-    //      }
+         // Returned when no time is provided.
+         if (Number.isNaN(seconds)) {
+           return '-:--';
+         }
      
-    //      // make it a whole number
-    //      var wholeSeconds = Math.floor(seconds);
+         // make it a whole number
+         var wholeSeconds = Math.floor(seconds);
      
-    //      var minutes = Math.floor(wholeSeconds / 60);
+         var minutes = Math.floor(wholeSeconds / 60);
      
-    //      remainingSeconds = wholeSeconds % 60;
+         remainingSeconds = wholeSeconds % 60;
      
-    //      var output = minutes + ':';
+         var output = minutes + ':';
      
-    //       // zero pad seconds, so 9 seconds should be :09
-    //       if (remainingSeconds < 10) {
-    //         output += '0';
-    //       }
+          // zero pad seconds, so 9 seconds should be :09
+          if (remainingSeconds < 10) {
+            output += '0';
+          }
      
-    //      output += remainingSeconds;
-    //      return output;
-    //   }
-    // })
+         output += remainingSeconds;
+         return output;
+      }
+    })
 
     // Returns a number between 0 and 1 to determine where the mouse event happened along the slider bar.
     var calculateSliderPercentFromMouseEvent = function($slider, event) {
