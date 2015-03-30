@@ -196,6 +196,7 @@ blocJams.controller('Album.controller', ['$scope', 'SongPlayer', function($scope
 // access to the shared SongPlayer object, allowing us to make powerful changes
 blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($scope, SongPlayer) {
   $scope.songPlayer = SongPlayer;
+  var muteStatus = false;
 
   //this function returns a class name for the volume icon based on volume levels from the SongPlayer.volume property
   $scope.volumeClass = function() {
@@ -204,7 +205,26 @@ blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($s
        'fa-volume-down': SongPlayer.volume <= 70 && SongPlayer.volume > 0,
        'fa-volume-up': SongPlayer.volume > 70
     }
-  }
+  };
+
+  $scope.toggleMute = function () {
+
+    //if not muted, record current volume, update muteStatus, set volume to zero
+    if (muteStatus === false) {
+      alert("First Click, muteStatus is " + muteStatus)
+      muteToggleVolume = SongPlayer.volume;
+      muteStatus = true;
+      SongPlayer.setVolume(0);
+    }
+
+    //if muted, set back to original volume, update mute status
+    else if (muteStatus === true) {
+      alert("Second Click, muteStatus is " + muteStatus)
+      muteStatus = false;
+      SongPlayer.setVolume(muteToggleVolume);
+    }
+    return SongPlayer.volume;
+  };
 
   //onTimeUpdate will dynamically set the playTime as song progresses using the value attribute on the slider directive to {{playTime}}
   //onTimeUpdate captures two events from the $broacast call - the event and the value (time of the song)
@@ -333,36 +353,6 @@ blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
 
 blocJams.directive('slider', ['$document', function ($document) {
     console.log("start of slider directive");
-    
-    //a filter in Angular will format data; this formats song in seconds to normal length format
-    blocJams.filter('timecode', function(){
-      console.log('start timecode filter');
-      return function(seconds) {
-         seconds = Number.parseFloat(seconds);
-     
-         // Returned when no time is provided.
-         if (Number.isNaN(seconds)) {
-           return '-:--';
-         }
-     
-         // make it a whole number
-         var wholeSeconds = Math.floor(seconds);
-     
-         var minutes = Math.floor(wholeSeconds / 60);
-     
-         remainingSeconds = wholeSeconds % 60;
-     
-         var output = minutes + ':';
-     
-          // zero pad seconds, so 9 seconds should be :09
-          if (remainingSeconds < 10) {
-            output += '0';
-          }
-     
-         output += remainingSeconds;
-         return output;
-      }
-    })
 
     // Returns a number between 0 and 1 to determine where the mouse event happened along the slider bar.
     var calculateSliderPercentFromMouseEvent = function($slider, event) {
@@ -373,7 +363,6 @@ blocJams.directive('slider', ['$document', function ($document) {
        offsetXPercent = Math.min(1, offsetXPercent);
        console.log("this is offsetXPercent" + offsetXPercent);
        return offsetXPercent;
-
     }
 
     var numberFromValue = function(value, defaultValue) {
@@ -464,6 +453,36 @@ blocJams.directive('slider', ['$document', function ($document) {
     }
 
 }]);
+
+//a filter in Angular will format data; this formats song in seconds to normal length format
+blocJams.filter('timecode', function(){
+  console.log('start timecode filter');
+  return function(seconds) {
+     seconds = Number.parseFloat(seconds);
+ 
+     // Returned when no time is provided.
+     if (Number.isNaN(seconds)) {
+       return '-:--';
+     }
+ 
+     // make it a whole number
+     var wholeSeconds = Math.floor(seconds);
+ 
+     var minutes = Math.floor(wholeSeconds / 60);
+ 
+     remainingSeconds = wholeSeconds % 60;
+ 
+     var output = minutes + ':';
+ 
+      // zero pad seconds, so 9 seconds should be :09
+      if (remainingSeconds < 10) {
+        output += '0';
+      }
+ 
+     output += remainingSeconds;
+     return output;
+  }
+});
 
 
 
