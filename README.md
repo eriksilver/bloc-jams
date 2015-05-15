@@ -3,6 +3,13 @@
 This is HTML5 application, built with [Brunch](http://brunch.io).
 
 ## Getting started
+* If app has been Installed & Run before
+    * From the app directory, enter 'npm start'
+        * This will run brunch & the server
+        * View app locally on Localhost:3000
+    *If the App hasn't been run for awhile - watch error output
+        and may need to reinstall Brunch or run 'npm install' to update dependencies
+
 * Install (if you don't have them):
     * [Node.js](http://nodejs.org): `brew install node` on OS X
     * [Brunch](http://brunch.io): `npm install -g brunch`
