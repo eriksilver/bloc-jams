@@ -17,21 +17,6 @@ var albumPicasso = {
 };
 
 
-
-// prior commands for jQuery
-// require("./landing");
-// require('./collection');
-// require('./album');
-// require('./profile');
-
-
-//Ui-router replaced prior Angular code
-
-
- // Notes on ui-router: ui-router manages views using states which are triggered by 
- // attaching a ui-sref attribute (short for "ui state reference") to an <a> tag 
- // (instead of an href). 
-
 //In Bloc Jams, we'll be using two providers to configure the state behavior ($stateProvider) 
 //and the way our app handles URLs in the browser ($locationProvider).
 
@@ -80,13 +65,20 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
 
  blocJams.controller('Landing.controller', ['$scope', function($scope) {
   $scope.subText = "Turn the music up!";
-  $scope.headingText = "Bloc Jams (click to shuffle)";
+  $scope.headingText = "Bloc Jams";
 
   $scope.subTextClicked = function() {
     $scope.subText += '!'; //Adds ! to our subText variable
     //because of data binding btw the subText variable and the page output,
     //when variable changes, it will update the output
    }
+
+  var count = 0;
+  $scope.countUp = function() {
+    count += 1;
+    console.log("here is the count on Library clicks", count);
+  }
+
 
    //this is an array placeholder of album images held in our images directory
    //we'll tell Angular to iterate over this array and display the albums
@@ -483,6 +475,44 @@ blocJams.filter('timecode', function(){
      return output;
   }
 });
+
+
+// Create a Metric Service.
+blocJams.service('Metric', ['$rootScope', function($rootScope) {
+
+  $rootScope.songPlays = [];
+
+  //count test in landing controller, line 66
+  //songplayer service example at 232
+
+  return {
+    
+    count: null,
+
+    countMore: function() {
+    count += 1;
+    console.log("here is the count on metric service clicks", count);
+    },
+
+    // Function that records a metric object by pushing it to the $rootScope array.
+    registerSongPlay: function(songObj) {
+      // Add time to event register.
+      songObj['playedAt'] = new Date();
+      $rootScope.songPlays.push(songObj);
+    },
+
+    listSongsPlayed: function() {
+      var songs = [];
+      angular.forEach($rootScope.songPlays, function(song) {
+        // Check to make sure the song isn't listed twice.
+        if (songs.indexOf(song.name) != -1) {
+          songs.push(song.name);
+        }
+      });
+      return songs;
+    }
+  };
+}]);
 
 
 
