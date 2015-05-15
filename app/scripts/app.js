@@ -63,7 +63,7 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
   // it on the module definition.
   //replacing: angular.module('BlocJams', []).controller('Landing.controller', ['$scope', function($scope) {
 
- blocJams.controller('Landing.controller', ['$scope', function($scope) {
+ blocJams.controller('Landing.controller', ['$scope','Metric', function($scope, Metric) {
   $scope.subText = "Turn the music up!";
   $scope.headingText = "Bloc Jams";
 
@@ -76,8 +76,14 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
   var count = 0;
   $scope.countUp = function() {
     count += 1;
-    console.log("here is the count on Library clicks", count);
+    console.log("here is the count on Choose Your Music clicks", count);
   }
+
+  $scope.countMore = function() {
+    return Metric.countMore();
+  };
+
+  // $scope.metric = Metric;
 
 
    //this is an array placeholder of album images held in our images directory
@@ -479,16 +485,25 @@ blocJams.filter('timecode', function(){
 
 // Create a Metric Service.
 blocJams.service('Metric', ['$rootScope', function($rootScope) {
-
+  //metric service can be applied to different parts of the application
+  //by injecting it into the differetn controllers that control different parts
   $rootScope.songPlays = [];
 
   //count test in landing controller, line 66
   //songplayer service example at 232
 
-  return {
-    
-    count: null,
+  // var get_incrementer_value = function() {
+  //   var count = 0;
+  //   return count;
+  // };
+  var count = 0;
 
+  //Notes on Service
+  //Can include private or helper functions before the return object in a service
+  //What is in the return objects is essentially a public API as those properties
+  //will be available to those that use the Metric service
+  return {
+  
     countMore: function() {
     count += 1;
     console.log("here is the count on metric service clicks", count);
