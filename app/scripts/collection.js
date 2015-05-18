@@ -32,7 +32,7 @@
         '<div class="collection-album-image-overlay">' //new image overlay class
       + '  <div class="collection-overlay-content">'
       + '    <a class="collection-overlay-button" href="' + albumURL + '">'
-      + '      <i class="fa fa-play"></i>' //icon tag for icon font from FontAwesome library
+      + '      <i class="fa fa-play" ng-click="countMore()"></i>' //icon tag for icon font from FontAwesome library
       + '    </a>'
       + '    &nbsp;' //HTML code for the unicode character spacebar. Inserts space btw two buttons
       + '    <a class="collection-overlay-button">'

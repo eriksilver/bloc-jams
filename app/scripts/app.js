@@ -117,7 +117,7 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
 //To generate the data for our collection, we'll use a for loop in our controller.
 // We'll use angular.copy to make 33 copies of albumPicasso 
 //and push them to the $scope.albums array in the for loop.
-blocJams.controller('Collection.controller', ['$scope','SongPlayer', function($scope, SongPlayer) {
+blocJams.controller('Collection.controller', ['$scope','SongPlayer', 'Metric', function($scope, SongPlayer, Metric) {
  $scope.albums = [];
   for (var i = 0; i < 33; i++) {
    $scope.albums.push(angular.copy(albumPicasso));
@@ -126,12 +126,24 @@ blocJams.controller('Collection.controller', ['$scope','SongPlayer', function($s
   $scope.playAlbum = function(album){
      SongPlayer.setSong(album, album.songs[0]); // Targets first song in the array.
  }
+
+  //calls countMore in the Metric service
+  $scope.countMore = function() {
+    return Metric.countMore();
+  };
 }]);
 
 //album controller, initialize $scope.album by copying albumPicasso
 //also injects SongPlayer service so we can use it in Album.controller
-blocJams.controller('Album.controller', ['$scope', 'SongPlayer', function($scope, SongPlayer) {
+blocJams.controller('Album.controller', ['$scope', 'SongPlayer', 'Metric', function($scope, SongPlayer, Metric) {
+ $scope.albums = [];
  $scope.album = angular.copy(albumPicasso);
+
+  //calls countMore in the Metric service
+  $scope.countMore = function() {
+    return Metric.countMore();
+  };
+
 
  //Both functions take an argument of a song (an ng-repeated variable
  // passed in from the view), and set the hoveredSong variable accordingly.
@@ -496,7 +508,9 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   $rootScope.songPlays = [];
 
   //Metric service added to Landing Controller: Lines 66-113
-  //Metric service added to Collection Controller: Lines 120-190
+  //Metric service added to Collection Controller: Lines 120-129
+  //Metric service added to Album Controller: Lines 129-190
+
 
   //count test in landing controller, line 66
   //songplayer service example at 232

@@ -10,23 +10,23 @@
         <div class="collection-album-image-overlay" ng-hide="showOverlay" >
           <div class="collection-overlay-content">
             <a class="collection-overlay-button" ng-click="playAlbum(album)"> 
-              <i class="fa fa-play" ng-click="countMore()"></i>
+              <i class="fa fa-play"></i>
             </a>
             &nbsp;
-            <a class="collection-overlay-button">
+            <a class="collection-overlay-button" ng-click="countMore()">
               <i class="fa fa-plus"></i>
             </a>
           </div>
         </div>
       </div>
          <div class="collection-album-info caption">
-         <p>
-         <a class="album-name" ui-sref="album"> {{ album.name }} </a>
-           <br/>
-           <a ui-sref="album"> {{ album.artist }} </a>
-           <br/>
-           {{ album.songs.length }} songs
-           <br/>
+         <p ng-click="countMore()">
+             <a class="album-name" ui-sref="album"> {{ album.name }} </a>
+             <br/>
+             <a ui-sref="album"> {{ album.artist }} </a>
+             <br/>
+             {{ album.songs.length }} songs
+             <br/>
          </p>
        </div>
      </div>
