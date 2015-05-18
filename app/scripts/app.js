@@ -79,8 +79,14 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
     console.log("here is the count on Choose Your Music clicks", count);
   }
 
+  //calls countMore in the Metric service
   $scope.countMore = function() {
     return Metric.countMore();
+  };
+
+  //calls registerSongPlay in the Metric Service
+  $scope.registerSongPlay = function() {
+    return Metric.registerSongPlay();
   };
 
   // $scope.metric = Metric;
@@ -489,6 +495,9 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   //by injecting it into the differetn controllers that control different parts
   $rootScope.songPlays = [];
 
+  //Metric service added to Landing Controller: Lines 66-113
+  //Metric service added to Collection Controller: Lines 120-190
+
   //count test in landing controller, line 66
   //songplayer service example at 232
 
@@ -514,6 +523,7 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
       // Add time to event register.
       songObj['playedAt'] = new Date();
       $rootScope.songPlays.push(songObj);
+      console.log("Here is $rootScope.songPlays:", $rootScope.songPlays);
     },
 
     listSongsPlayed: function() {
