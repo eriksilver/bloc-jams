@@ -13,9 +13,12 @@
      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
      <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/buzz/1.1.9/buzz.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
      <script src="/javascripts/app.js"></script>
+     <!-- <script src="https://cdnjs.com/libraries/chart.js"></script> -->
      <script>
        require('scripts/app');
+
      </script>
   </head>
   
@@ -25,6 +28,9 @@
       <div class="container">
         <div class="navbar-header"> <!-- Nav Bar --> 
           <!-- Instead of linking the <a> tag with href, we use an attribute directive called ui-sref. Instead of adding a reference to a hyperlink, we add a reference to the state name. -->
+          <!-- <canvas id="myChart" width="600" height="400"></canvas> -->
+
+
           <a ui-sref='landing' class='logo navbar-left'>
             <img src="/images/blocjams.png">
           </a>
@@ -38,7 +44,34 @@
     <!-- Render templates with ui-view here -->
     <div ui-view>  
     </div>
- 
+    
+    <script>
+    //     //load data first
+    //     var sampleData = {
+    //         labels : ["January","February","March","April","May","June"],
+    //         datasets: [
+    //             {
+    //                 label: "My First dataset",
+    //                 fillColor: "rgba(220,220,220,0.5)",
+    //                 strokeColor: "rgba(220,220,220,0.8)",
+    //                 highlightFill: "rgba(220,220,220,0.75)",
+    //                 highlightStroke: "rgba(220,220,220,1)",
+    //                 data: [65, 59, 80, 81, 56, 55, 40]
+    //             },
+    //             {
+    //                 label: "My Second dataset",
+    //                 fillColor: "rgba(151,187,205,0.5)",
+    //                 strokeColor: "rgba(151,187,205,0.8)",
+    //                 highlightFill: "rgba(151,187,205,0.75)",
+    //                 highlightStroke: "rgba(151,187,205,1)",
+    //                 data: [28, 48, 40, 19, 86, 27, 90]
+    //             }
+    //         ]
+    //     }
+
+    //   var myChart = document.getElementById("myChart").getContext("2d");
+    //   new Chart(myChart).Line(sampleData);
+    </script>
 
   </body> 
 </html>

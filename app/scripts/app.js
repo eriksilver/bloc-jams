@@ -42,7 +42,6 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
      templateUrl: '/templates/landing.html'
    });
 
-
   //We need to add a $stateProvider configuration to work with our new
   // album collection view and collection controller. 
    $stateProvider.state('collection', {
@@ -54,9 +53,16 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
    //album route, associated with proper url, template, and controller
    $stateProvider.state('album', {
      url: '/album',
-     templateUrl: '/templates/album.html',
-     controller: 'Album.controller'
+     controller: 'Album.controller',
+     templateUrl: '/templates/album.html'
    });
+
+    $stateProvider.state('analytics', {
+      url: '/analytics',
+      controller: 'Analytics.controller',
+      templateUrl: '/templates/analytics.html'
+   });
+
 }]);
 
   // This is a cleaner way to call the controller than crowding
@@ -502,6 +508,10 @@ blocJams.filter('timecode', function(){
   }
 });
 
+blocJams.controller('Analytics.controller', ['$rootScope','Metric', function($rootScope, Metric) {
+
+
+}]);
 
 // Create a Metric Service.
 blocJams.service('Metric', ['$rootScope', function($rootScope) {
@@ -561,6 +571,45 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
       return songs;
     }
   };
+}]);
+
+//create directive for Charting
+blocJams.directive('charting', ['$document', function ($document) {
+  return {
+    templateUrl: '/templates/directives/charting.html', //the path to an HTML template
+    restrict: 'E', //instructs to treat as an element, <slider>; e.g. wont run on <div slider>
+    link: function(scope, element, attributes) {
+      var testData = {
+          labels: ["January", "February", "March", "April", "May", "June", "July"],
+          datasets: [
+              {
+                  label: "My First dataset",
+                  fillColor: "rgba(220,220,220,0.5)",
+                  strokeColor: "rgba(220,220,220,0.8)",
+                  highlightFill: "rgba(220,220,220,0.75)",
+                  highlightStroke: "rgba(220,220,220,1)",
+                  data: [65, 59, 80, 81, 56, 55, 40]
+              },
+              {
+                  label: "My Second dataset",
+                  fillColor: "rgba(151,187,205,0.5)",
+                  strokeColor: "rgba(151,187,205,0.8)",
+                  highlightFill: "rgba(151,187,205,0.75)",
+                  highlightStroke: "rgba(151,187,205,1)",
+                  data: [28, 48, 40, 19, 86, 27, 100]
+              }
+          ]
+      };
+
+      var clicksChart = document.getElementById("clicksChart").getContext("2d");
+      new Chart(clicksChart).Line(testData);
+
+      //Bloc provided example
+      //var ctx = $("#pie-chart").get(0).getContext("2d");
+      //new Chart(ctx).Pie(attributes.pieData, options);
+    }
+  };
+
 }]);
 
 
