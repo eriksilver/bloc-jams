@@ -66,6 +66,7 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
  blocJams.controller('Landing.controller', ['$scope','Metric', function($scope, Metric) {
   $scope.subText = "Turn the music up!";
   $scope.headingText = "Bloc Jams";
+  var songObj = {};
 
   $scope.subTextClicked = function() {
     $scope.subText += '!'; //Adds ! to our subText variable
@@ -77,7 +78,7 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
   $scope.countUp = function() {
     count += 1;
     console.log("here is the count on Choose Your Music clicks", count);
-  }
+  };
 
   //calls countMore in the Metric service
   $scope.countMore = function() {
@@ -254,20 +255,20 @@ blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($s
 
 //using rootScope for playTime broadcast event so it can be used anywhere in app
 blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
- //To integrate buzz's audio controls with our SongPlayer service, 
- //We'll declare a variable called currentSoundFile and set it to null. 
- //We can then update that variable by redefining our setSong method in SongPlayer.
- var currentSoundFile = null;
+   //To integrate buzz's audio controls with our SongPlayer service, 
+   //We'll declare a variable called currentSoundFile and set it to null. 
+   //We can then update that variable by redefining our setSong method in SongPlayer.
+   var currentSoundFile = null;
 
- //method to calculate the trackIndex of a song within an album
- //trackIndex function receives an album and a song and uses the JS
- //indexOf function to determine the song's location within the album
- //this is an internal or private method that doesn't need to be accessed
- //from outside the service, we so dont return it with the rest of the
- //SongPlayer object 
- var trackIndex = function(album, song) {
-     return album.songs.indexOf(song);
- }; 
+   //method to calculate the trackIndex of a song within an album
+   //trackIndex function receives an album and a song and uses the JS
+   //indexOf function to determine the song's location within the album
+   //this is an internal or private method that doesn't need to be accessed
+   //from outside the service, we so dont return it with the rest of the
+   //SongPlayer object 
+   var trackIndex = function(album, song) {
+       return album.songs.indexOf(song);
+   }; 
  
   return {
    currentSong: null,
@@ -278,6 +279,7 @@ blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
    play: function() {
      this.playing = true;
      currentSoundFile.play(); //.play is a method of Buzz
+     //console.log("this is SongPlayer.play()", song);  
    },
 
    pause: function() {
@@ -519,7 +521,13 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   //   var count = 0;
   //   return count;
   // };
-  var count = 0;
+
+  var $rootScope = {counter: 0}; //variable for countMore test function
+  
+  //var songObj = {}; //create empty songObj to use with Metric service
+  //var songObj['playedAt'] = {};
+  var $rootScope = {playedAt: null};
+
 
   //Notes on Service
   //Can include private or helper functions before the return object in a service
@@ -528,16 +536,18 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   return {
   
     countMore: function() {
-    count += 1;
-    console.log("here is the count on metric service clicks", count);
+    $rootScope.counter += 1;
+    console.log("here is the count on metric service clicks", $rootScope.counter);
     },
 
     // Function that records a metric object by pushing it to the $rootScope array.
     registerSongPlay: function(songObj) {
       // Add time to event register.
-      songObj['playedAt'] = new Date();
+      //songObj['playedAt'] = new Date(); //object bracket notation
+      //songObj.playedAt = new Date(); //object bracket notation
+
       $rootScope.songPlays.push(songObj);
-      console.log("Here is $rootScope.songPlays:", $rootScope.songPlays);
+      console.log("Here is $rootScope.playedAt:", $rootScope.playedAt);
     },
 
     listSongsPlayed: function() {
