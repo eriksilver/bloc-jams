@@ -260,7 +260,7 @@ blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($s
 
 
 //using rootScope for playTime broadcast event so it can be used anywhere in app
-blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
+blocJams.service('SongPlayer', ['$rootScope', 'Metric', function($rootScope, Metric) {
    //To integrate buzz's audio controls with our SongPlayer service, 
    //We'll declare a variable called currentSoundFile and set it to null. 
    //We can then update that variable by redefining our setSong method in SongPlayer.
@@ -285,7 +285,9 @@ blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
    play: function() {
      this.playing = true;
      currentSoundFile.play(); //.play is a method of Buzz
-     //console.log("this is SongPlayer.play()", song);  
+     //console.log("this is SongPlayer.play()", song); 
+     console.log("asdfsdf", this.currentSong); 
+     Metric.registerSongPlay(this.currentSong);
    },
 
    pause: function() {
@@ -347,6 +349,7 @@ blocJams.service('SongPlayer', ['$rootScope', function($rootScope) {
    //is an array of acceptable formats for our audio file, and the second, preload, 
    //ensures that the file is preloaded before we attempt to play it.
     setSong: function(album, song) {
+      Metric.registerSongPlay(song);
       if (currentSoundFile) {
         currentSoundFile.stop();
       }
@@ -508,8 +511,17 @@ blocJams.filter('timecode', function(){
   }
 });
 
-blocJams.controller('Analytics.controller', ['$rootScope','Metric', function($rootScope, Metric) {
+blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope, Metric) {
+  $scope.testData = Metric.getData();
+  $scope.elementId = "clicksChart";
 
+  $scope.makeChart = function() {
+    var clicksChart = document.getElementById($scope.elementId).getContext("2d");
+    console.log(clicksChart);
+    new Chart(clicksChart).Line($scope.testData);
+  };
+
+  $scope.makeChart();
 
 }]);
 
@@ -549,14 +561,14 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
     $rootScope.counter += 1;
     console.log("here is the count on metric service clicks", $rootScope.counter);
     },
-
+// Metric.registerSongPlay(songs);
     // Function that records a metric object by pushing it to the $rootScope array.
     registerSongPlay: function(songObj) {
+      console.log("Metric Service: ", songObj);
       // Add time to event register.
-      //songObj['playedAt'] = new Date(); //object bracket notation
+      songObj['playedAt'] = new Date(); //object bracket notation
       //songObj.playedAt = new Date(); //object bracket notation
-
-      $rootScope.songPlays.push(songObj);
+      // $rootScope.songPlays.push(songObj);
       console.log("Here is $rootScope.playedAt:", $rootScope.playedAt);
     },
 
@@ -569,6 +581,30 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
         }
       });
       return songs;
+    },
+
+    getData: function() {
+      return {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+        {
+          label: "My First dataset",
+          fillColor: "rgba(220,220,220,0.5)",
+          strokeColor: "rgba(220,220,220,0.8)",
+          highlightFill: "rgba(220,220,220,0.75)",
+          highlightStroke: "rgba(220,220,220,1)",
+          data: [65, 59, 80, 81, 56, 55, 40]
+        },
+        {
+          label: "My Second dataset",
+          fillColor: "rgba(151,187,205,0.5)",
+          strokeColor: "rgba(151,187,205,0.8)",
+          highlightFill: "rgba(151,187,205,0.75)",
+          highlightStroke: "rgba(151,187,205,1)",
+          data: [28, 48, 40, 19, 86, 27, 100]
+        }
+        ]
+      };
     }
   };
 }]);

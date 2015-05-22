@@ -29,7 +29,7 @@
         <div class="navbar-header"> <!-- Nav Bar --> 
           <!-- Instead of linking the <a> tag with href, we use an attribute directive called ui-sref. Instead of adding a reference to a hyperlink, we add a reference to the state name. -->
 
-          
+
           <canvas id="myChart" width="600" height="400"></canvas>
 
 
@@ -72,7 +72,11 @@
         }
 
       var myChart = document.getElementById("myChart").getContext("2d");
-      new Chart(myChart).Line(sampleData);
+      new Chart(myChart).Line(sampleData); //to use sampleData above
+      //new Chart(myChart).Line(attributes.lineData);
+
+
+
     </script>
 
   </body> 
