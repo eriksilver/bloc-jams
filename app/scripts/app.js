@@ -285,8 +285,7 @@ blocJams.service('SongPlayer', ['$rootScope', 'Metric', function($rootScope, Met
    play: function() {
      this.playing = true;
      currentSoundFile.play(); //.play is a method of Buzz
-     //console.log("this is SongPlayer.play()", song); 
-     console.log("asdfsdf", this.currentSong); 
+     //console.log("asdfsdf", this); //logs current song object
      Metric.registerSongPlay(this.currentSong);
    },
 
@@ -349,7 +348,7 @@ blocJams.service('SongPlayer', ['$rootScope', 'Metric', function($rootScope, Met
    //is an array of acceptable formats for our audio file, and the second, preload, 
    //ensures that the file is preloaded before we attempt to play it.
     setSong: function(album, song) {
-      Metric.registerSongPlay(song);
+      //Metric.registerSongPlay(song);
       if (currentSoundFile) {
         currentSoundFile.stop();
       }
@@ -528,13 +527,12 @@ blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope,
 // Create a Metric Service.
 blocJams.service('Metric', ['$rootScope', function($rootScope) {
   //metric service can be applied to different parts of the application
-  //by injecting it into the differetn controllers that control different parts
-  $rootScope.songPlays = [];
+  //by injecting it into the different controllers that control different parts
+  //$rootScope.songPlays = [];
 
   //Metric service added to Landing Controller: Lines 66-113
   //Metric service added to Collection Controller: Lines 120-129
   //Metric service added to Album Controller: Lines 129-190
-
 
   //count test in landing controller, line 66
   //songplayer service example at 232
@@ -545,10 +543,13 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   // };
 
   var $rootScope = {counter: 0}; //variable for countMore test function
+  var $rootScope = {playedCount: 0}; 
+
+
   
   //var songObj = {}; //create empty songObj to use with Metric service
   //var songObj['playedAt'] = {};
-  var $rootScope = {playedAt: null};
+  //var $rootScope = {playedAt: null};
 
 
   //Notes on Service
@@ -558,18 +559,24 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   return {
   
     countMore: function() {
-    $rootScope.counter += 1;
-    console.log("here is the count on metric service clicks", $rootScope.counter);
+      $rootScope.counter += 1;
+      console.log("here is the count on metric service clicks", $rootScope.counter);
     },
-// Metric.registerSongPlay(songs);
+
     // Function that records a metric object by pushing it to the $rootScope array.
+    // To use, we can call the service, Metric.registerSongPlay(passAsongObject) on an event or element
     registerSongPlay: function(songObj) {
       console.log("Metric Service: ", songObj);
       // Add time to event register.
       songObj['playedAt'] = new Date(); //object bracket notation
+      $rootScope.playedCount += 1;
+
+
       //songObj.playedAt = new Date(); //object bracket notation
       // $rootScope.songPlays.push(songObj);
-      console.log("Here is $rootScope.playedAt:", $rootScope.playedAt);
+      console.log("This is songObj.playedAt:", songObj.playedAt);
+      console.log("This is $rootScope.playedCount:", $rootScope.playedCount);
+
     },
 
     listSongsPlayed: function() {
