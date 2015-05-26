@@ -258,6 +258,8 @@ blocJams.service('SongPlayer', ['$rootScope', 'Metric', function($rootScope, Met
    //We'll declare a variable called currentSoundFile and set it to null. 
    //We can then update that variable by redefining our setSong method in SongPlayer.
    var currentSoundFile = null;
+  
+
 
    //method to calculate the trackIndex of a song within an album
    //trackIndex function receives an album and a song and uses the JS
@@ -524,7 +526,7 @@ blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope,
 blocJams.service('Metric', ['$rootScope', function($rootScope) {
   //metric service can be applied to different parts of the application
   //by injecting it into the different controllers that control different parts
-  //$rootScope.songPlays = [];
+
 
   //Metric service added to Landing Controller: Lines 66-113
   //Metric service added to Collection Controller: Lines 120-129
@@ -533,8 +535,12 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   //count test in landing controller, line 66
   //songplayer service example at 232
 
+
   var $rootScope = {counter: 0}; //variable for countMore test function
   var $rootScope = {playedCount: 0}; 
+  $rootScope.songPlays = []; //order matters here, this needs to go after other rootscope variables are defined
+
+
 
   //Notes on Service
   //Can include private or helper functions before the return object in a service
@@ -551,15 +557,20 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
     // To use, we can call the service, Metric.registerSongPlay(passAsongObject) on an event or element
     // called in SongPlayer service on Play button, line 289
     registerSongPlay: function(songObj) {
+
       //console.log("Metric Service: ", songObj);
       // Add time to event register.
       songObj['playedAt'] = new Date(); //object bracket notation
-      $rootScope.playedCount += 1;
+      // Add count of plays to event register.
+      $rootScope.playedCount += 1; //count number of plays
+      // Addz song timestamps to an array
+      $rootScope.songPlays.push(songObj.playedAt); //each played song date pushed to this array
 
       //songObj.playedAt = new Date(); //object bracket notation
       // $rootScope.songPlays.push(songObj);
       console.log("This is songObj.playedAt:", songObj);
       console.log("This is $rootScope.playedCount:", $rootScope.playedCount);
+      console.log("This is $rootScope.songPlays:", $rootScope.songPlays);
     },
 
     listSongsPlayed: function() {
