@@ -80,24 +80,17 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
     //when variable changes, it will update the output
    }
 
-  var count = 0;
-  $scope.countUp = function() {
-    count += 1;
-    console.log("here is the count on Choose Your Music clicks", count);
-  };
-
   //calls countMore in the Metric service
+  //connected to text on landing page for test purposes
   $scope.countMore = function() {
     return Metric.countMore();
   };
 
   //calls registerSongPlay in the Metric Service
+  //connected to text on landing page for test purposes
   $scope.registerSongPlay = function() {
     return Metric.registerSongPlay();
   };
-
-  // $scope.metric = Metric;
-
 
    //this is an array placeholder of album images held in our images directory
    //we'll tell Angular to iterate over this array and display the albums
@@ -286,7 +279,10 @@ blocJams.service('SongPlayer', ['$rootScope', 'Metric', function($rootScope, Met
      this.playing = true;
      currentSoundFile.play(); //.play is a method of Buzz
      //console.log("asdfsdf", this); //logs current song object
+     Metric.countMore();
      Metric.registerSongPlay(this.currentSong);
+     Metric.listSongsPlayed(this.currentSong);
+    
    },
 
    pause: function() {
@@ -548,11 +544,12 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   
     countMore: function() {
       $rootScope.counter += 1;
-      console.log("here is the count on metric service clicks", $rootScope.counter);
+      console.log("here is the count on Metric.countMore", $rootScope.counter);
     },
 
     // Function that records a metric object by pushing it to the $rootScope array.
     // To use, we can call the service, Metric.registerSongPlay(passAsongObject) on an event or element
+    // called in SongPlayer service on Play button, line 289
     registerSongPlay: function(songObj) {
       //console.log("Metric Service: ", songObj);
       // Add time to event register.
@@ -561,11 +558,12 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
 
       //songObj.playedAt = new Date(); //object bracket notation
       // $rootScope.songPlays.push(songObj);
-      console.log("This is songObj.playedAt:", songObj.playedAt);
+      console.log("This is songObj.playedAt:", songObj);
       console.log("This is $rootScope.playedCount:", $rootScope.playedCount);
     },
 
     listSongsPlayed: function() {
+      console.log("start listSongsPlayed:");
       var songs = [];
       angular.forEach($rootScope.songPlays, function(song) {
         // Check to make sure the song isn't listed twice.
@@ -573,6 +571,7 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
           songs.push(song.name);
         }
       });
+      console.log("listSongsPlayed songs var:", songs);
       return songs;
     },
 
