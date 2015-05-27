@@ -563,25 +563,30 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
       songObj['playedAt'] = new Date(); //object bracket notation
       // Add count of plays to event register.
       $rootScope.playedCount += 1; //count number of plays
-      // Addz song timestamps to an array
+      
+      // Add song timestamps to an array
+      $rootScope.songPlays.push(songObj.name); //each played song date pushed to this array
       $rootScope.songPlays.push(songObj.playedAt); //each played song date pushed to this array
 
-      //songObj.playedAt = new Date(); //object bracket notation
-      // $rootScope.songPlays.push(songObj);
       console.log("This is songObj.playedAt:", songObj);
       console.log("This is $rootScope.playedCount:", $rootScope.playedCount);
       console.log("This is $rootScope.songPlays:", $rootScope.songPlays);
+
     },
 
     listSongsPlayed: function() {
       console.log("start listSongsPlayed:");
+      console.log("here is rootScope.songplays from listSongsPlayed function:", $rootScope.songPlays);
       var songs = [];
-      angular.forEach($rootScope.songPlays, function(song) {
-        // Check to make sure the song isn't listed twice.
-        if (songs.indexOf(song.name) != -1) {
-          songs.push(song.name);
-        }
-      });
+
+    // BLOC boilerplate
+      // angular.forEach($rootScope.songPlays, function(song) {
+      //   // Check to make sure the song isn't listed twice.
+      //   if (songs.indexOf(song.name) != -1) {
+      //    songs.push(song.name); 
+      //   }
+      // });
+
       console.log("listSongsPlayed songs var:", songs);
       return songs;
     },
