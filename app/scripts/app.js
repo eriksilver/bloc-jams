@@ -512,10 +512,12 @@ blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope,
   $scope.testData = Metric.getData();
   $scope.elementId = "clicksChart";
   
-  var now = moment();
-  var day = moment().format('dddd');
+  //var now = moment();
+  var day = moment().format('MMMM');
   console.log("momentjs:", day);
 
+  var month = new Date().getMonth();
+  console.log("month:", month);
 
   $scope.makeChart = function() {
     var clicksChart = document.getElementById($scope.elementId).getContext("2d");
@@ -563,13 +565,13 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
     registerSongPlay: function(songObj) {
       //console.log("Metric Service: ", songObj);
       // Add time to event register.
-      songObj['playedAt'] = new Date(); //object bracket notation
+      songObj['playedAt'] = new Date().getMonth(); //object bracket notation
       // Add count of plays to event register.
       $rootScope.playedCount += 1; //count number of plays
       
       // Add song timestamps to an array
-      $rootScope.songPlays.push(songObj.name); //each played song date pushed to this array
-      $rootScope.songPlays.push(songObj.playedAt); //each played song date pushed to this array
+      $rootScope.songPlays.push({name: songObj.name, playedAt: songObj.playedAt}); //each played song date pushed to this array
+      //$rootScope.songPlays.push(songObj.playedAt); //each played song date pushed to this array
 
       console.log("This is songObj.playedAt:", songObj);
       console.log("This is $rootScope.playedCount:", $rootScope.playedCount);
