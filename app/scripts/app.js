@@ -516,7 +516,6 @@ blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope,
 
   $scope.makeChart = function() {
     var clicksChart = document.getElementById($scope.elementId).getContext("2d");
-    console.log(clicksChart);
     new Chart(clicksChart).Bar($scope.testData);
   };
 
