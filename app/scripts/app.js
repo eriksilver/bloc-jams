@@ -517,7 +517,7 @@ blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope,
   $scope.makeChart = function() {
     var clicksChart = document.getElementById($scope.elementId).getContext("2d");
     console.log(clicksChart);
-    new Chart(clicksChart).Line($scope.testData);
+    new Chart(clicksChart).Bar($scope.testData);
   };
 
   $scope.makeChart();
@@ -577,6 +577,8 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
     },
 
     getData: function() {
+      var array1 = [10, 59, 80, 81, 56, 55, 100]
+      console.log("here is array1", array1);
       return {
         labels: ["January", "February", "March", "April", "May", "June", "July"],
         datasets: [
@@ -586,7 +588,7 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
           strokeColor: "rgba(220,220,220,0.8)",
           highlightFill: "rgba(220,220,220,0.75)",
           highlightStroke: "rgba(220,220,220,1)",
-          data: [65, 59, 80, 81, 56, 55, 40]
+          data: array1
         },
         {
           label: "My Second dataset",
