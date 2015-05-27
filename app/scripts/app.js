@@ -511,6 +511,11 @@ blocJams.filter('timecode', function(){
 blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope, Metric) {
   $scope.testData = Metric.getData();
   $scope.elementId = "clicksChart";
+  
+  var now = moment();
+  var day = moment().format('dddd');
+  console.log("momentjs:", day);
+
 
   $scope.makeChart = function() {
     var clicksChart = document.getElementById($scope.elementId).getContext("2d");
@@ -556,7 +561,6 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
     // To use, we can call the service, Metric.registerSongPlay(passAsongObject) on an event or element
     // called in SongPlayer service on Play button, line 289
     registerSongPlay: function(songObj) {
-
       //console.log("Metric Service: ", songObj);
       // Add time to event register.
       songObj['playedAt'] = new Date(); //object bracket notation
