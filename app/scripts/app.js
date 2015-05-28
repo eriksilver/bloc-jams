@@ -284,6 +284,7 @@ blocJams.service('SongPlayer', ['$rootScope', 'Metric', function($rootScope, Met
      Metric.countMore();
      Metric.registerSongPlay(this.currentSong);
      Metric.listSongsPlayed(this.currentSong);
+     Metric.songCounter();
     
    },
 
@@ -545,7 +546,7 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   var $rootScope = {counter: 0}; //variable for countMore test function
   var $rootScope = {playedCount: 0}; 
   $rootScope.songPlays = []; //order matters here, this needs to go after other rootscope variables are defined
-
+  //var songObj['playedCount'] = 0;
 
 
   //Notes on Service
@@ -567,15 +568,39 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
       // Add time to event register.
       songObj['playedAt'] = new Date().getMonth(); //object bracket notation
       // Add count of plays to event register.
+      // songObj['playedCount'] += 1; //count number of plays
       $rootScope.playedCount += 1; //count number of plays
+
       
       // Add song timestamps to an array
-      $rootScope.songPlays.push({name: songObj.name, playedAt: songObj.playedAt}); //each played song date pushed to this array
+      $rootScope.songPlays.push({name: songObj.name, playedAt: songObj.playedAt, playedCount: $rootScope.playedCount}); //each played song date pushed to this array
       //$rootScope.songPlays.push(songObj.playedAt); //each played song date pushed to this array
 
       console.log("This is songObj.playedAt:", songObj);
       console.log("This is $rootScope.playedCount:", $rootScope.playedCount);
       console.log("This is $rootScope.songPlays:", $rootScope.songPlays);
+
+    },
+    //note songPlays object: values: blue, May(4), 3 | Prop: name, playedAt, playedCount | obj: obj 1, obj 2, ...
+    songCounter: function() {
+      //create array & initialize array with zero value otherwise returns NaN
+      var countSongName = new Array (5);
+      for (var i = 0; i < countSongName.length; i++) {
+        countSongName[i] = 0;
+      };
+      angular.forEach($rootScope.songPlays, function(value){
+        countSongName[0] += value.name === 'Blue' ? 1 : 0;
+        countSongName[1] += value.name === 'Green' ? 1 : 0; 
+        countSongName[2] += value.name === 'Red' ? 1 : 0;
+        countSongName[3] += value.name === 'Pink' ? 1 : 0;
+        countSongName[4] += value.name === 'Magenta' ? 1 : 0;
+      });
+    
+    console.log("this is count of blue:", countSongName[0]);
+    console.log("this is countSongName for green:", countSongName[1]);
+    console.log("this is countSongName for magenta:", countSongName[4]);
+
+    //return countSongName; need to return this??
 
     },
 
