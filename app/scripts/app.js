@@ -284,7 +284,8 @@ blocJams.service('SongPlayer', ['$rootScope', 'Metric', function($rootScope, Met
      Metric.countMore();
      Metric.registerSongPlay(this.currentSong);
      Metric.listSongsPlayed(this.currentSong);
-     Metric.songCounter();
+     Metric.songCountByName();
+     Metric.songCountByMonth();
     
    },
 
@@ -513,12 +514,12 @@ blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope,
   $scope.testData = Metric.getData();
   $scope.elementId = "clicksChart";
   
-  //var now = moment();
-  var day = moment().format('MMMM');
-  console.log("momentjs:", day);
 
-  var month = new Date().getMonth();
-  console.log("month:", month);
+  var month = moment().format('MMMM');
+  console.log("momentjs:", month);
+
+  // var month = new Date().getMonth();
+  // console.log("month:", month);
 
   $scope.makeChart = function() {
     var clicksChart = document.getElementById($scope.elementId).getContext("2d");
@@ -555,6 +556,7 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   //will be available to those that use the Metric service
   return {
   
+    //test counter only
     countMore: function() {
       $rootScope.counter += 1;
       console.log("here is the count on Metric.countMore", $rootScope.counter);
@@ -566,12 +568,11 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
     registerSongPlay: function(songObj) {
       //console.log("Metric Service: ", songObj);
       // Add time to event register.
-      songObj['playedAt'] = new Date().getMonth(); //object bracket notation
+      songObj['playedAt'] = moment().format('MMMM'); //object bracket notation
       // Add count of plays to event register.
       // songObj['playedCount'] += 1; //count number of plays
       $rootScope.playedCount += 1; //count number of plays
 
-      
       // Add song timestamps to an array
       $rootScope.songPlays.push({name: songObj.name, playedAt: songObj.playedAt, playedCount: $rootScope.playedCount}); //each played song date pushed to this array
       //$rootScope.songPlays.push(songObj.playedAt); //each played song date pushed to this array
@@ -582,7 +583,7 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
 
     },
     //note songPlays object: values: blue, May(4), 3 | Prop: name, playedAt, playedCount | obj: obj 1, obj 2, ...
-    songCounter: function() {
+    songCountByName: function() {
       //create array & initialize array with zero value otherwise returns NaN
       var countSongName = new Array (5);
       for (var i = 0; i < countSongName.length; i++) {
@@ -600,7 +601,33 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
     console.log("this is countSongName for green:", countSongName[1]);
     console.log("this is countSongName for magenta:", countSongName[4]);
 
-    //return countSongName; need to return this??
+    },
+
+    songCountByMonth: function() {
+      //create array & initialize array with zero value otherwise returns NaN
+      var countSongMonth = new Array (12);
+      for (var i = 0; i < countSongMonth.length; i++) {
+        countSongMonth[i] = 0;
+      };
+      angular.forEach($rootScope.songPlays, function(value){
+        countSongMonth[0] += value.playedAt === 'January' ? 1 : 0;
+        countSongMonth[1] += value.playedAt === 'February' ? 1 : 0; 
+        countSongMonth[2] += value.playedAt === 'March' ? 1 : 0;
+        countSongMonth[3] += value.playedAt === 'April' ? 1 : 0;
+        countSongMonth[4] += value.playedAt === 'May' ? 1 : 0;
+        countSongMonth[5] += value.playedAt === 'June' ? 1 : 0;
+        countSongMonth[6] += value.playedAt === 'July' ? 1 : 0; 
+        countSongMonth[7] += value.playedAt === 'August' ? 1 : 0;
+        countSongMonth[8] += value.playedAt === 'September' ? 1 : 0;
+        countSongMonth[9] += value.playedAt === 'October' ? 1 : 0;
+        countSongMonth[10] += value.playedAt === 'November' ? 1 : 0;
+        countSongMonth[11] += value.playedAt === 'December' ? 1 : 0;
+
+      });
+    
+    console.log("this is count of January:", countSongMonth[0]);
+    console.log("this is countSongMonth for February:", countSongMonth[1]);
+    console.log("this is countSongMonth for May:", countSongMonth[4]);
 
     },
 
