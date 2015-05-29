@@ -1,5 +1,20 @@
-<h1>Analytics page</h1>
 
-<div ng-init="elementId=clicksChart">
-    <canvas id="clicksChart" width="400" height="400"></canvas>
+<div class="chart-container">
+    <div class="chart-left">Song Plays by Song Name</div>
+    <div class="chart-middle">Song Plays by Month</div>
+    <div class="chart-right">Chart #3</div>
 </div>
+
+    <div class="chart-left" ng-init="elementId=ChartSongCountByName">
+        <canvas id="ChartSongCountByName" width="350" height="350"></canvas>
+    </div>
+
+    <div class="chart-middle move-down" ng-init="elementId=ChartSongCountByMonth">
+        <canvas id="ChartSongCountByMonth" width="350" height="350"></canvas>
+    </div>
+
+<!--     <div class="chart-right" ng-init="elementId=ChartSongCountByName">
+        <canvas id="ChartSongCountByName" width="350" height="350"></canvas>
+    </div>
+ -->
+ 

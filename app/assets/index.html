@@ -21,7 +21,7 @@
      </script>
   </head>
   
-  <body>
+  <body ng-controller="ApplicationController">
 
 
     <nav class="player-header-nav navbar">
@@ -38,7 +38,11 @@
           </a>
         </div>
           <ul class='nav navbar-nav navbar-right'>
-            <li><a ui-sref='collection'>Library</a></li>
+            <li><a ui-sref='landing'>Home</a></li>
+            <li><a ui-sref='album'>Album</a></li>
+            <li><a ui-sref='collection'>Collection</a></li>
+            <li><a ui-sref='analytics'>Analytics</a></li>
+            
           </ul>
       </div>
     </nav>

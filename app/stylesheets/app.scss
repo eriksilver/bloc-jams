@@ -5,6 +5,7 @@
 @import "buttons";
 @import "profile";
 @import "mixins_variables";
+@import "analytics";
 
 @mixin backgroundRadial {
   background: -webkit-radial-gradient( #2b1339, #380c77);

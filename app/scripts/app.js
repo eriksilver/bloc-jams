@@ -69,6 +69,10 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
   // it on the module definition.
   //replacing: angular.module('BlocJams', []).controller('Landing.controller', ['$scope', function($scope) {
 
+blocJams.controller("ApplicationController", ["$rootScope", function($rootScope) {
+  $rootScope.countSongName = [];
+}]);
+
  blocJams.controller('Landing.controller', ['$scope','Metric', function($scope, Metric) {
   $scope.subText = "Turn the music up!";
   $scope.headingText = "Bloc Jams";
@@ -511,22 +515,37 @@ blocJams.filter('timecode', function(){
 });
 
 blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope, Metric) {
-  $scope.testData = Metric.getData();
-  $scope.elementId = "clicksChart";
-  
+  //console.log("If page throws an error, Cannot read property '0' of undefined, Play button needs to be clicked first to initialize data variable", $rootScope.countSongName[0])
 
+  //Chart 1
+  $scope.songDataBySongName = Metric.getDataSongPlaysBySongName();
+  $scope.elementId1 = "ChartSongCountByName";
+  
+  //Chart 2
+  $scope.songDataByMonth = Metric.getDataSongPlaysByMonth();
+  $scope.elementId2 = "ChartSongCountByMonth";
+
+  //testing momentjs formatting
   var month = moment().format('MMMM');
   console.log("momentjs:", month);
-
+  
   // var month = new Date().getMonth();
   // console.log("month:", month);
 
-  $scope.makeChart = function() {
-    var clicksChart = document.getElementById($scope.elementId).getContext("2d");
-    new Chart(clicksChart).Bar($scope.testData);
+  $scope.makeChart1 = function() {
+    var ChartSongCountByName = document.getElementById($scope.elementId1).getContext("2d");
+    new Chart(ChartSongCountByName).Bar($scope.songDataBySongName);
   };
 
-  $scope.makeChart();
+  $scope.makeChart1();
+
+  $scope.makeChart2 = function() {
+    var ChartSongCountByMonth = document.getElementById($scope.elementId2).getContext("2d");
+    new Chart(ChartSongCountByMonth).Bar($scope.songDataByMonth);
+  };
+
+  $scope.makeChart2();
+
 
 }]);
 
@@ -547,8 +566,6 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
   var $rootScope = {counter: 0}; //variable for countMore test function
   var $rootScope = {playedCount: 0}; 
   $rootScope.songPlays = []; //order matters here, this needs to go after other rootscope variables are defined
-  //var songObj['playedCount'] = 0;
-
 
   //Notes on Service
   //Can include private or helper functions before the return object in a service
@@ -577,6 +594,7 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
       $rootScope.songPlays.push({name: songObj.name, playedAt: songObj.playedAt, playedCount: $rootScope.playedCount}); //each played song date pushed to this array
       //$rootScope.songPlays.push(songObj.playedAt); //each played song date pushed to this array
 
+
       console.log("This is songObj.playedAt:", songObj);
       console.log("This is $rootScope.playedCount:", $rootScope.playedCount);
       console.log("This is $rootScope.songPlays:", $rootScope.songPlays);
@@ -585,7 +603,7 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
     //note songPlays object: values: blue, May(4), 3 | Prop: name, playedAt, playedCount | obj: obj 1, obj 2, ...
     songCountByName: function() {
       //create array & initialize array with zero value otherwise returns NaN
-      var countSongName = new Array (5);
+      var countSongName = new Array (5); 
       for (var i = 0; i < countSongName.length; i++) {
         countSongName[i] = 0;
       };
@@ -595,9 +613,13 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
         countSongName[2] += value.name === 'Red' ? 1 : 0;
         countSongName[3] += value.name === 'Pink' ? 1 : 0;
         countSongName[4] += value.name === 'Magenta' ? 1 : 0;
+      
+      $rootScope.countSongName = countSongName;
+
+      return $rootScope.countSongName;
       });
     
-    console.log("this is count of blue:", countSongName[0]);
+    console.log("this is count of blue:", $rootScope.countSongName[0]);
     console.log("this is countSongName for green:", countSongName[1]);
     console.log("this is countSongName for magenta:", countSongName[4]);
 
@@ -623,6 +645,10 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
         countSongMonth[10] += value.playedAt === 'November' ? 1 : 0;
         countSongMonth[11] += value.playedAt === 'December' ? 1 : 0;
 
+      $rootScope.countSongMonth = countSongMonth;
+
+      return $rootScope.countSongMonth;
+
       });
     
     console.log("this is count of January:", countSongMonth[0]);
@@ -631,50 +657,60 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
 
     },
 
-    listSongsPlayed: function() {
-      console.log("start listSongsPlayed:");
-      console.log("here is rootScope.songplays from listSongsPlayed function:", $rootScope.songPlays);
-      var songs = [];
+    // listSongsPlayed: function() {
+    //   console.log("start listSongsPlayed:");
+    //   console.log("here is rootScope.songplays from listSongsPlayed function:", $rootScope.songPlays);
+    //   var songs = [];
 
-    // BLOC boilerplate
-      // angular.forEach($rootScope.songPlays, function(song) {
-      //   // Check to make sure the song isn't listed twice.
-      //   if (songs.indexOf(song.name) != -1) {
-      //    songs.push(song.name); 
-      //   }
-      // });
+    // // BLOC boilerplate
+    //   // angular.forEach($rootScope.songPlays, function(song) {
+    //   //   // Check to make sure the song isn't listed twice.
+    //   //   if (songs.indexOf(song.name) != -1) {
+    //   //    songs.push(song.name); 
+    //   //   }
+    //   // });
 
-      console.log("listSongsPlayed songs var:", songs);
-      return songs;
-    },
+    //   console.log("listSongsPlayed songs var:", songs);
+    //   return songs;
+    // },
 
-    getData: function() {
-      var array1 = [10, 59, 80, 81, 56, 55, 100]
-      console.log("here is array1", array1);
+    getDataSongPlaysBySongName: function() {
+      //var array1 = [10, 59, 80, 81, 56, 55, 100]
       return {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        labels: ["Blue", "Green", "Red", "Pink", "Magenta"],
         datasets: [
         {
-          label: "My First dataset",
+          label: "Song Plays by Song Name",
           fillColor: "rgba(220,220,220,0.5)",
           strokeColor: "rgba(220,220,220,0.8)",
           highlightFill: "rgba(220,220,220,0.75)",
           highlightStroke: "rgba(220,220,220,1)",
-          data: array1
-        },
-        {
-          label: "My Second dataset",
-          fillColor: "rgba(151,187,205,0.5)",
-          strokeColor: "rgba(151,187,205,0.8)",
-          highlightFill: "rgba(151,187,205,0.75)",
-          highlightStroke: "rgba(151,187,205,1)",
-          data: [28, 48, 40, 19, 86, 27, 100]
+          data: $rootScope.countSongName
         }
         ]
       };
-    }
-  };
-}]);
+    },
+
+    getDataSongPlaysByMonth: function() {
+      //var array2 = [50, 10, 50, 50, 56, 55, 22, 45, 33, 36, 50, 55]
+
+      return {
+        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        datasets: [
+        {
+          label: "Song Plays by Song Month",
+          fillColor: "rgba(220,220,220,0.5)",
+          strokeColor: "rgba(220,220,220,0.8)",
+          highlightFill: "rgba(220,220,220,0.75)",
+          highlightStroke: "rgba(220,220,220,1)",
+          data: $rootScope.countSongMonth
+        }
+        ]
+      };
+    },
+
+  }; //end Return
+}]); //end Metric Service
 
 //create directive for Charting
 blocJams.directive('charting', ['$document', function ($document) {
