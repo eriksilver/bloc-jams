@@ -73,11 +73,11 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
     $rootScope.countSongName = [];
 
      //
-  // var ref = new Firebase("https://dazzling-torch-1941.firebaseio.com/messages");
+  var ref = new Firebase("https://dazzling-torch-1941.firebaseio.com/messages");
 
-  // // create a synchronized array
-  // // click on `index.html` above to see it used in the DOM!
-  // $scope.messages = $firebaseArray(ref);
+  // create a synchronized array
+  // click on `index.html` above to see it used in the DOM!
+  $scope.messages = $firebaseArray(ref);
  
 
  }]);
@@ -99,7 +99,12 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
     return Metric.countMore();
   };
 
+  var ref = new Firebase("https://dazzling-torch-1941.firebaseio.com/messages");
 
+  // create a synchronized array
+  // click on `index.html` above to see it used in the DOM!
+  $scope.messages = $firebaseArray(ref);
+ 
 
   //calls registerSongPlay in the Metric Service
   //connected to text on landing page for test purposes

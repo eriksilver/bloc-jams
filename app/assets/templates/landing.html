@@ -1,4 +1,4 @@
- 
+
      <div class ='hero-content'><!-- Hero content -->
       <div class='container'>
       <h1 ng-click="headingTextClicked()"> {{ headingText }} </h1>
@@ -16,7 +16,6 @@
 
           <div class="point col-md-4">
           <h5 ng-click="countMore()"> Choose your music</h5>
-          <span ng-repeat="message in messages">{{ message.text }}</span>
           <p> The world is full of music; why should you have to listen to music that someone else chooses?
           </p>
           </div>
@@ -28,6 +27,7 @@
 
           <div class="point col-md-4">
           <h5>Mobile enabled</h5>
+          <li ng-repeat="message in messages">{{ message.text }}</li>
           <p>Listen to your music on the go. This streaming service is available on all mobile platforms.
           </p>
           </div>
