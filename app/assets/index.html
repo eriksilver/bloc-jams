@@ -9,13 +9,19 @@
      <link rel="stylesheet" type="text/css" href="/stylesheets/app.css">
      <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800,600,700,300' rel='stylesheet' type='text/css'>
      <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+     
+     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
      <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
+
      <script src="https://cdnjs.cloudflare.com/ajax/libs/buzz/1.1.9/buzz.min.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
+     
+ 
+
      <script src="/javascripts/app.js"></script>
+     
      <script>
        require('scripts/app');
      </script>
@@ -38,6 +44,7 @@
           </a>
         </div>
           <ul class='nav navbar-nav navbar-right'>
+            <li ng-repeat="message in messages">{{ message.text }}</li>
             <li><a ui-sref='landing'>Home</a></li>
             <li><a ui-sref='album'>Album</a></li>
             <li><a ui-sref='collection'>Collection</a></li>

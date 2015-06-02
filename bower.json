@@ -13,5 +13,8 @@
     "jquery": "~2.1.1",
     "angular-ui-router": "~0.2.10",
     "buzz": "~1.1.0"
+  },
+  "resolutions": {
+    "jquery": "1.9.1"
   }
 }

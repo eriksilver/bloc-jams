@@ -23,7 +23,7 @@ var albumPicasso = {
 //To make sure our providers can be used throughout the entirety of the Angular app,
 // we need to inject them using the .config() method on our app's module.
 
-blocJams = angular.module('BlocJams', ['ui.router']);
+blocJams = angular.module('BlocJams', ['ui.router','firebase']);
 
 blocJams.config(['$stateProvider', '$locationProvider', function($stateProvider, $locationProvider) {
 $locationProvider.html5Mode(true); //configure states to match plain routes
@@ -69,11 +69,20 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
   // it on the module definition.
   //replacing: angular.module('BlocJams', []).controller('Landing.controller', ['$scope', function($scope) {
 
-blocJams.controller("ApplicationController", ["$rootScope", function($rootScope) {
-  $rootScope.countSongName = [];
-}]);
+ blocJams.controller("ApplicationController", ["$rootScope","$scope", "$firebaseArray", function($rootScope, $scope, $firebaseArray) {
+    $rootScope.countSongName = [];
 
- blocJams.controller('Landing.controller', ['$scope','Metric', function($scope, Metric) {
+     //
+  // var ref = new Firebase("https://dazzling-torch-1941.firebaseio.com/messages");
+
+  // // create a synchronized array
+  // // click on `index.html` above to see it used in the DOM!
+  // $scope.messages = $firebaseArray(ref);
+ 
+
+ }]);
+
+ blocJams.controller('Landing.controller', ['$scope','Metric', '$firebaseArray', function($scope, Metric, $firebaseArray) {
   $scope.subText = "Turn the music up!";
   $scope.headingText = "Bloc Jams";
   var songObj = {};
@@ -89,6 +98,8 @@ blocJams.controller("ApplicationController", ["$rootScope", function($rootScope)
   $scope.countMore = function() {
     return Metric.countMore();
   };
+
+
 
   //calls registerSongPlay in the Metric Service
   //connected to text on landing page for test purposes
@@ -114,7 +125,7 @@ blocJams.controller("ApplicationController", ["$rootScope", function($rootScope)
      '/images/album-placeholders/album-9.jpg',
    ];
 
- }]);
+}]);
 
 //To Angularize our album collection logic, we'll be populating album data 
 //from our controller.
@@ -247,7 +258,7 @@ blocJams.controller('PlayerBar.controller', ['$scope', 'SongPlayer', function($s
   };
 
   //onTimeUpdate will dynamically set the playTime as song progresses using the value attribute on the slider directive to {{playTime}}
-  //onTimeUpdate captures two events from the $broacast call - the event and the value (time of the song)
+  //onTimeUpdate captures two events from the $broadcast call - the event and the value (time of the song)
   SongPlayer.onTimeUpdate(function(event, time){
       $scope.$apply(function(){
         $scope.playTime = time;
@@ -550,10 +561,9 @@ blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope,
 }]);
 
 // Create a Metric Service.
-blocJams.service('Metric', ['$rootScope', function($rootScope) {
+blocJams.service('Metric', ['$rootScope', function($rootScope, $firebaseArray) {
   //metric service can be applied to different parts of the application
   //by injecting it into the different controllers that control different parts
-
 
   //Metric service added to Landing Controller: Lines 66-113
   //Metric service added to Collection Controller: Lines 120-129
@@ -561,6 +571,7 @@ blocJams.service('Metric', ['$rootScope', function($rootScope) {
 
   //count test in landing controller, line 66
   //songplayer service example at 232
+
 
 
   var $rootScope = {counter: 0}; //variable for countMore test function
