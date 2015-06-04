@@ -44,8 +44,8 @@
             <img src="/images/blocjams.png">
           </a>
         </div>
+          <li ng-repeat="message in messages"> {{ message.text }} </li>
           <ul class='nav navbar-nav navbar-right'>
-            <li ng-repeat="message in messages">{{ message.text }}</li>
             <li><a ui-sref='landing'>Home</a></li>
             <li><a ui-sref='album'>Album</a></li>
             <li><a ui-sref='collection'>Collection</a></li>
