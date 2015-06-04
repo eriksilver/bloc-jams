@@ -78,6 +78,10 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
   // create a synchronized array
   // click on `index.html` above to see it used in the DOM!
   $scope.messages = $firebaseArray(ref);
+
+  $scope.messages.$add({bar: "food"});
+  $scope.messages.$add({coffee: "good"});
+
  
 
  }]);
