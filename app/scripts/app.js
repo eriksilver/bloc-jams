@@ -72,17 +72,6 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
  blocJams.controller("ApplicationController", ["$rootScope","$scope", "$firebaseArray", function($rootScope, $scope, $firebaseArray) {
     $rootScope.countSongName = [];
 
-     //
-  var ref = new Firebase("https://dazzling-torch-1941.firebaseio.com/messages");
-
-  // create a synchronized array
-  // click on `index.html` above to see it used in the DOM!
-  $scope.messages = $firebaseArray(ref);
-
-  $scope.messages.$add({bar: "food"});
-  $scope.messages.$add({coffee: "good"});
-
- 
 
  }]);
 
@@ -307,8 +296,8 @@ blocJams.service('SongPlayer', ['$rootScope', 'Metric', function($rootScope, Met
      //console.log("asdfsdf", this); //logs current song object
      Metric.countMore();
      Metric.registerSongPlay(this.currentSong);
-     Metric.listSongsPlayed(this.currentSong);
-     Metric.songCountByName();
+     // Metric.listSongsPlayed(this.currentSong);
+     // Metric.songCountByName();
      Metric.songCountByMonth();
     
    },
@@ -570,7 +559,7 @@ blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope,
 }]);
 
 // Create a Metric Service.
-blocJams.service('Metric', ['$rootScope', function($rootScope, $firebaseArray) {
+blocJams.service('Metric', ['$rootScope', '$firebaseArray', function($rootScope, $firebaseArray) {
   //metric service can be applied to different parts of the application
   //by injecting it into the different controllers that control different parts
 
@@ -581,12 +570,7 @@ blocJams.service('Metric', ['$rootScope', function($rootScope, $firebaseArray) {
   //count test in landing controller, line 66
   //songplayer service example at 232
 
-
-
-  var $rootScope = {counter: 0}; //variable for countMore test function
-  var $rootScope = {playedCount: 0}; 
-  $rootScope.songPlays = []; //order matters here, this needs to go after other rootscope variables are defined
-
+  var songDataObject = {};
   //Notes on Service
   //Can include private or helper functions before the return object in a service
   //What is in the return objects is essentially a public API as those properties
@@ -603,47 +587,50 @@ blocJams.service('Metric', ['$rootScope', function($rootScope, $firebaseArray) {
     // To use, we can call the service, Metric.registerSongPlay(passAsongObject) on an event or element
     // called in SongPlayer service on Play button, line 289
     registerSongPlay: function(songObj) {
-      //console.log("Metric Service: ", songObj);
-      // Add time to event register.
-      songObj['playedAt'] = moment().format('MMMM'); //object bracket notation
-      // Add count of plays to event register.
-      // songObj['playedCount'] += 1; //count number of plays
-      $rootScope.playedCount += 1; //count number of plays
 
-      // Add song timestamps to an array
-      $rootScope.songPlays.push({name: songObj.name, playedAt: songObj.playedAt, playedCount: $rootScope.playedCount}); //each played song date pushed to this array
-      //$rootScope.songPlays.push(songObj.playedAt); //each played song date pushed to this array
+      // Add time to event to song Object.
+      songObj['playedAt'] = moment().format('MMMM Do YYYY, h:mm:ss a'); //object bracket notation
 
+      //Isolate song name and timestamp to the song data object
+      songDataObject.songName = songObj.name;
+      songDataObject.playedAt = songObj.playedAt;
+      
+      //connect Firebase array
+      var ref = new Firebase("https://dazzling-torch-1941.firebaseio.com/songRegister");
 
-      console.log("This is songObj.playedAt:", songObj);
-      console.log("This is $rootScope.playedCount:", $rootScope.playedCount);
-      console.log("This is $rootScope.songPlays:", $rootScope.songPlays);
+      // create a synchronized array
+      $rootScope.songRegister = $firebaseArray(ref);
+
+      //add songDataObject to firebase array
+      $rootScope.songRegister.$add(songDataObject);
+
+      console.log("This is songRegister:", $rootScope.songRegister);
 
     },
     //note songPlays object: values: blue, May(4), 3 | Prop: name, playedAt, playedCount | obj: obj 1, obj 2, ...
-    songCountByName: function() {
-      //create array & initialize array with zero value otherwise returns NaN
-      var countSongName = new Array (5); 
-      for (var i = 0; i < countSongName.length; i++) {
-        countSongName[i] = 0;
-      };
-      angular.forEach($rootScope.songPlays, function(value){
-        countSongName[0] += value.name === 'Blue' ? 1 : 0;
-        countSongName[1] += value.name === 'Green' ? 1 : 0; 
-        countSongName[2] += value.name === 'Red' ? 1 : 0;
-        countSongName[3] += value.name === 'Pink' ? 1 : 0;
-        countSongName[4] += value.name === 'Magenta' ? 1 : 0;
+    // songCountByName: function() {
+    //   //create array & initialize array with zero value otherwise returns NaN
+    //   var countSongName = new Array (5); 
+    //   for (var i = 0; i < countSongName.length; i++) {
+    //     countSongName[i] = 0;
+    //   };
+    //   angular.forEach($rootScope.songPlays, function(value){
+    //     countSongName[0] += value.name === 'Blue' ? 1 : 0;
+    //     countSongName[1] += value.name === 'Green' ? 1 : 0; 
+    //     countSongName[2] += value.name === 'Red' ? 1 : 0;
+    //     countSongName[3] += value.name === 'Pink' ? 1 : 0;
+    //     countSongName[4] += value.name === 'Magenta' ? 1 : 0;
       
-      $rootScope.countSongName = countSongName;
+    //   $rootScope.countSongName = countSongName;
 
-      return $rootScope.countSongName;
-      });
+    //   return $rootScope.countSongName;
+    //   });
     
-    console.log("this is count of blue:", $rootScope.countSongName[0]);
-    console.log("this is countSongName for green:", countSongName[1]);
-    console.log("this is countSongName for magenta:", countSongName[4]);
+    // console.log("this is count of blue:", $rootScope.countSongName[0]);
+    // console.log("this is countSongName for green:", countSongName[1]);
+    // console.log("this is countSongName for magenta:", countSongName[4]);
 
-    },
+    // },
 
     songCountByMonth: function() {
       //create array & initialize array with zero value otherwise returns NaN
