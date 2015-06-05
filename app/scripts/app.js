@@ -130,7 +130,7 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
 //To generate the data for our collection, we'll use a for loop in our controller.
 // We'll use angular.copy to make 33 copies of albumPicasso 
 //and push them to the $scope.albums array in the for loop.
-blocJams.controller('Collection.controller', ['$scope','SongPlayer', 'Metric', function($scope, SongPlayer, Metric) {
+blocJams.controller('Collection.controller', ['$scope','SongPlayer', 'Metric','$rootScope', function($scope, SongPlayer, Metric, $rootScope) {
  $scope.albums = [];
   for (var i = 0; i < 33; i++) {
    $scope.albums.push(angular.copy(albumPicasso));
@@ -144,7 +144,22 @@ blocJams.controller('Collection.controller', ['$scope','SongPlayer', 'Metric', f
   $scope.countMore = function() {
     return Metric.countMore();
   };
+
+  // $scope.$on('songPlayDateStamped', function (event, data) {
+    
+  //   console.log($songObj.playedAt);
+  // });
+
+  // $rootScope.$broadcast("testEvent", 'some data');
+
+
+  $scope.$on("testEvent", function(event, data) {
+    console.log(data);
+  });
+
 }]);
+
+
 
 //album controller, initialize $scope.album by copying albumPicasso
 //also injects SongPlayer service so we can use it in Album.controller
@@ -600,6 +615,10 @@ blocJams.service('Metric', ['$rootScope', '$firebaseArray', function($rootScope,
 
       // create a synchronized array
       $rootScope.songRegister = $firebaseArray(ref);
+
+      //broadcast fires the event down the scope
+      // $rootScope.$broadcast('songPlayDateStamped', 'songObj');
+      $rootScope.$broadcast("testEvent", 'some data');
 
       //add songDataObject to firebase array
       $rootScope.songRegister.$add(songDataObject);
