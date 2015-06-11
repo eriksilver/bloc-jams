@@ -145,19 +145,14 @@ blocJams.controller('Collection.controller', ['$scope','SongPlayer', 'Metric','$
     return Metric.countMore();
   };
 
-  // $scope.$on('songPlayDateStamped', function (event, data) {
-    
-  //   console.log($songObj.playedAt);
-  // });
-
-  // $rootScope.$broadcast("testEvent", 'some data');
 
 
   $scope.$on("testEvent", function(event, data) {
-    console.log(data);
+    console.log("here is broadcast event - songRegister:", data);
   });
 
 }]);
+
 
 
 
@@ -616,12 +611,12 @@ blocJams.service('Metric', ['$rootScope', '$firebaseArray', function($rootScope,
       // create a synchronized array
       $rootScope.songRegister = $firebaseArray(ref);
 
-      //broadcast fires the event down the scope
-      // $rootScope.$broadcast('songPlayDateStamped', 'songObj');
-      $rootScope.$broadcast("testEvent", 'some data');
-
       //add songDataObject to firebase array
       $rootScope.songRegister.$add(songDataObject);
+
+      //broadcast fires the event down the scope
+      // $rootScope.$broadcast('songPlayDateStamped', 'songObj');
+      $rootScope.$broadcast("testEvent", $rootScope.songRegister);
 
       console.log("This is songRegister:", $rootScope.songRegister);
 
