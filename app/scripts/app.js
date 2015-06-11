@@ -62,18 +62,51 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
       controller: 'Analytics.controller',
       templateUrl: '/templates/analytics.html'
    });
-
 }]);
+
 
   // This is a cleaner way to call the controller than crowding
   // it on the module definition.
   //replacing: angular.module('BlocJams', []).controller('Landing.controller', ['$scope', function($scope) {
 
- blocJams.controller("ApplicationController", ["$rootScope","$scope", "$firebaseArray", function($rootScope, $scope, $firebaseArray) {
-    $rootScope.countSongName = [];
+blocJams.controller("ApplicationController", ["$rootScope","$scope", "$firebaseArray", function($rootScope, $scope, $firebaseArray) {
+    // $rootScope.countSongName = [];
+
+    var client = new Keen({
+          projectId: "5579cb6346f9a779cb3dee22",   // String (required always)
+          writeKey: "d37e46e682c9046ca1766f6cba815f833299bffa1c6fdaa5a94e484f3c67973eedf775e143768bd29dcbd809a823da8d687e1c5d3538e94403da41b7dad03a16e17b5fc2731c06d52a4d3a519f206437563736ec42af4f2a30968042926da829a2097afb01d8e206e27d32e8c8f99ae5",     // String (required for sending data)
+          readKey: "394c80e1b52d1468d2205bd4bfde02456a6fed068f97e4829b62343601ac4da1f7f1e272b64e57d2984f04b8c68f749e58b763332f3e7910cb65bb1763c6fc15d923cf772b1cb5189962bed4d307a96a6973b508158babd5563a2fee4e98ba545f614342d37103b5e9d128ef13489629",       // String (required for querying data)
+          protocol: "https",              // String (optional: https | http | auto)
+          host: "api.keen.io/3.0",        // String (optional)
+          requestType: "jsonp"            // String (optional: jsonp, xhr, beacon)
+    });
+
+    //Application controller is on index.html
+    // Create a data object with the properties you want to send
+    var purchaseEvent = {
+      item: "golden gadget",  
+      price: 25.50,
+      referrer: document.referrer,
+      keen: {
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    // Send it to the "purchases" collection
+    client.addEvent("purchases", purchaseEvent, function(err, res){
+      if (err) {
+        // there was an error!
+      }
+      else {
+        //"success": true
+      }
+    });
+
+    console.log("here is purchase event:", purchaseEvent);
 
 
- }]);
+}]);
+
 
  blocJams.controller('Landing.controller', ['$scope','Metric', '$firebaseArray', function($scope, Metric, $firebaseArray) {
   $scope.subText = "Turn the music up!";
