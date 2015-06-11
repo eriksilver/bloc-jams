@@ -1,20 +1,18 @@
 
 <div class="chart-container">
-    <div class="chart-left">Song Plays by Song Name</div>
-    <div class="chart-middle">Song Plays by Month</div>
-    <div class="chart-right">Chart #3</div>
+    <!-- order matters for floats; put left and right first -->
+    <div class="chart-left text-margin">Song Plays by Song Name</div>
+    <div class="chart-right text-margin">Song Play Totals by Month</div>
+    <div class="chart-middle text-margin">Song Play Totals by Day</div>
+
+    <!-- order matters for floats; put left and right first -->
+    <div class="chart-left" id="ChartSongCountByName">
+    </div>
+
+    <div class="chart-right" id="ChartSongCountByMonth">
+    </div>
+
+    <div class="chart-middle" id="ChartSongCountByDay">
+    </div>
+
 </div>
-
-    <div class="chart-left" ng-init="elementId=ChartSongCountByName">
-        <canvas id="ChartSongCountByName" width="350" height="350"></canvas>
-    </div>
-
-    <div class="chart-middle move-down" ng-init="elementId=ChartSongCountByMonth">
-        <canvas id="ChartSongCountByMonth" width="350" height="350"></canvas>
-    </div>
-
-<!--     <div class="chart-right" ng-init="elementId=ChartSongCountByName">
-        <canvas id="ChartSongCountByName" width="350" height="350"></canvas>
-    </div>
- -->
- 

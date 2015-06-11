@@ -1,27 +1,40 @@
 
-h1 {
-    text-align: center;
+
+.text-margin {
+    margin-top: -5px;
 }
 
 .chart-container {
     width:100%;
+    vertical-align: top;
+    display:inline-block;
 }
 
+//Order matters here, first left and right b/c they float; then middle element
 .chart-left {
+    margin-left: 25px;
     float:left;
-    width:400px;
+    width:425px;
 }
 
 .chart-right {
+    margin-right: 25px;
     float:right;
-    width:400px;
+    width:425px;
 }
 
 .chart-middle {
-    margin:0 auto;
-    width:400px;
+    margin: 0 auto;
+    width:425px;
+
 }
 
-.move-down {
-    margin-top: 0px;
-}
+
+
+
+
+
+
+// .move-down {
+//     margin-top: 0px;
+// }

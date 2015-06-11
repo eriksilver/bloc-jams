@@ -72,37 +72,37 @@ $locationProvider.html5Mode(true); //configure states to match plain routes
 blocJams.controller("ApplicationController", ["$rootScope","$scope", "$firebaseArray", function($rootScope, $scope, $firebaseArray) {
     // $rootScope.countSongName = [];
 
-    var client = new Keen({
-          projectId: "5579cb6346f9a779cb3dee22",   // String (required always)
-          writeKey: "d37e46e682c9046ca1766f6cba815f833299bffa1c6fdaa5a94e484f3c67973eedf775e143768bd29dcbd809a823da8d687e1c5d3538e94403da41b7dad03a16e17b5fc2731c06d52a4d3a519f206437563736ec42af4f2a30968042926da829a2097afb01d8e206e27d32e8c8f99ae5",     // String (required for sending data)
-          readKey: "394c80e1b52d1468d2205bd4bfde02456a6fed068f97e4829b62343601ac4da1f7f1e272b64e57d2984f04b8c68f749e58b763332f3e7910cb65bb1763c6fc15d923cf772b1cb5189962bed4d307a96a6973b508158babd5563a2fee4e98ba545f614342d37103b5e9d128ef13489629",       // String (required for querying data)
-          protocol: "https",              // String (optional: https | http | auto)
-          host: "api.keen.io/3.0",        // String (optional)
-          requestType: "jsonp"            // String (optional: jsonp, xhr, beacon)
-    });
+    // var client = new Keen({
+    //       projectId: "5579cb6346f9a779cb3dee22",   // String (required always)
+    //       writeKey: "d37e46e682c9046ca1766f6cba815f833299bffa1c6fdaa5a94e484f3c67973eedf775e143768bd29dcbd809a823da8d687e1c5d3538e94403da41b7dad03a16e17b5fc2731c06d52a4d3a519f206437563736ec42af4f2a30968042926da829a2097afb01d8e206e27d32e8c8f99ae5",     // String (required for sending data)
+    //       readKey: "394c80e1b52d1468d2205bd4bfde02456a6fed068f97e4829b62343601ac4da1f7f1e272b64e57d2984f04b8c68f749e58b763332f3e7910cb65bb1763c6fc15d923cf772b1cb5189962bed4d307a96a6973b508158babd5563a2fee4e98ba545f614342d37103b5e9d128ef13489629",       // String (required for querying data)
+    //       protocol: "https",              // String (optional: https | http | auto)
+    //       host: "api.keen.io/3.0",        // String (optional)
+    //       requestType: "jsonp"            // String (optional: jsonp, xhr, beacon)
+    // });
 
-    //Application controller is on index.html
-    // Create a data object with the properties you want to send
-    var purchaseEvent = {
-      item: "golden gadget",  
-      price: 25.50,
-      referrer: document.referrer,
-      keen: {
-        timestamp: new Date().toISOString()
-      }
-    };
+    // //Application controller is on index.html
+    // // Create a data object with the properties you want to send
+    // var purchaseEvent = {
+    //   item: "golden gadget",  
+    //   price: 25.50,
+    //   referrer: document.referrer,
+    //   keen: {
+    //     timestamp: new Date().toISOString()
+    //   }
+    // };
 
-    // Send it to the "purchases" collection
-    client.addEvent("purchases", purchaseEvent, function(err, res){
-      if (err) {
-        // there was an error!
-      }
-      else {
-        //"success": true
-      }
-    });
+    // // Send it to the "purchases" collection
+    // client.addEvent("purchases", purchaseEvent, function(err, res){
+    //   if (err) {
+    //     // there was an error!
+    //   }
+    //   else {
+    //     //"success": true
+    //   }
+    // });
 
-    console.log("here is purchase event:", purchaseEvent);
+    // console.log("here is purchase event:", purchaseEvent);
 
 
 }]);
@@ -118,19 +118,6 @@ blocJams.controller("ApplicationController", ["$rootScope","$scope", "$firebaseA
     //because of data binding btw the subText variable and the page output,
     //when variable changes, it will update the output
    }
-
-  //calls countMore in the Metric service
-  //connected to text on landing page for test purposes
-  $scope.countMore = function() {
-    return Metric.countMore();
-  };
-
-  var ref = new Firebase("https://dazzling-torch-1941.firebaseio.com/messages");
-
-  // create a synchronized array
-  // click on `index.html` above to see it used in the DOM!
-  $scope.messages = $firebaseArray(ref);
- 
 
   //calls registerSongPlay in the Metric Service
   //connected to text on landing page for test purposes
@@ -165,41 +152,22 @@ blocJams.controller("ApplicationController", ["$rootScope","$scope", "$firebaseA
 //and push them to the $scope.albums array in the for loop.
 blocJams.controller('Collection.controller', ['$scope','SongPlayer', 'Metric','$rootScope', function($scope, SongPlayer, Metric, $rootScope) {
  $scope.albums = [];
+
   for (var i = 0; i < 33; i++) {
    $scope.albums.push(angular.copy(albumPicasso));
- }
+  }
 
   $scope.playAlbum = function(album){
      SongPlayer.setSong(album, album.songs[0]); // Targets first song in the array.
- }
-
-  //calls countMore in the Metric service
-  $scope.countMore = function() {
-    return Metric.countMore();
-  };
-
-
-
-  $scope.$on("testEvent", function(event, data) {
-    console.log("here is broadcast event - songRegister:", data);
-  });
+  }
 
 }]);
-
-
-
 
 //album controller, initialize $scope.album by copying albumPicasso
 //also injects SongPlayer service so we can use it in Album.controller
 blocJams.controller('Album.controller', ['$scope', 'SongPlayer', 'Metric', function($scope, SongPlayer, Metric) {
  $scope.albums = [];
  $scope.album = angular.copy(albumPicasso);
-
-  //calls countMore in the Metric service
-  $scope.countMore = function() {
-    return Metric.countMore();
-  };
-
 
  //Both functions take an argument of a song (an ng-repeated variable
  // passed in from the view), and set the hoveredSong variable accordingly.
@@ -336,13 +304,8 @@ blocJams.service('SongPlayer', ['$rootScope', 'Metric', function($rootScope, Met
    play: function() {
      this.playing = true;
      currentSoundFile.play(); //.play is a method of Buzz
-     //console.log("asdfsdf", this); //logs current song object
-     Metric.countMore();
+
      Metric.registerSongPlay(this.currentSong);
-     // Metric.listSongsPlayed(this.currentSong);
-     // Metric.songCountByName();
-     Metric.songCountByMonth();
-    
    },
 
    pause: function() {
@@ -566,37 +529,65 @@ blocJams.filter('timecode', function(){
   }
 });
 
-blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope, Metric) {
-  //console.log("If page throws an error, Cannot read property '0' of undefined, Play button needs to be clicked first to initialize data variable", $rootScope.countSongName[0])
+blocJams.controller('Analytics.controller', ['$scope','Metric', function($scope, Metric) {  
+
+  var client = new Keen({
+  projectId: "5579cb6346f9a779cb3dee22",
+  readKey: "394c80e1b52d1468d2205bd4bfde02456a6fed068f97e4829b62343601ac4da1f7f1e272b64e57d2984f04b8c68f749e58b763332f3e7910cb65bb1763c6fc15d923cf772b1cb5189962bed4d307a96a6973b508158babd5563a2fee4e98ba545f614342d37103b5e9d128ef13489629"
+  });
 
   //Chart 1
-  $scope.songDataBySongName = Metric.getDataSongPlaysBySongName();
-  $scope.elementId1 = "ChartSongCountByName";
-  
+  Keen.ready(function(){
+      var query = new Keen.Query("count", {
+        eventCollection: "songData",
+        groupBy: "songName",
+        timezone: "UTC"
+      });
+      
+      client.draw(query, document.getElementById("ChartSongCountByName"), {
+        chartType: "columnchart",
+        title: "Cumulative Song Plays by Song Name",
+        height: 350,
+        width: 400,
+        legend: { position: "none" }
+      });
+  });
+
   //Chart 2
-  $scope.songDataByMonth = Metric.getDataSongPlaysByMonth();
-  $scope.elementId2 = "ChartSongCountByMonth";
+  Keen.ready(function(){
+      var query = new Keen.Query("count", {
+        eventCollection: "songData",
+        interval: "daily",
+        timeframe: "this_14_days",
+        timezone: "UTC"
+      });
 
-  //testing momentjs formatting
-  var month = moment().format('MMMM');
-  console.log("momentjs:", month);
+      client.draw(query, document.getElementById("ChartSongCountByDay"), {
+        chartType: "areachart",
+        title: "Total Song Plays Each Day (trailing 2 weeks)",
+        height: 350,
+        width: 400,
+        legend: { position: "none" }
+      });
+  });
+
+  //Chart 3
+  Keen.ready(function(){
+    var query = new Keen.Query("count", {
+      eventCollection: "songData",
+      interval: "monthly",
+      timeframe: "this_1_years",
+      timezone: "UTC"
+    });
   
-  // var month = new Date().getMonth();
-  // console.log("month:", month);
-
-  $scope.makeChart1 = function() {
-    var ChartSongCountByName = document.getElementById($scope.elementId1).getContext("2d");
-    new Chart(ChartSongCountByName).Bar($scope.songDataBySongName);
-  };
-
-  $scope.makeChart1();
-
-  $scope.makeChart2 = function() {
-    var ChartSongCountByMonth = document.getElementById($scope.elementId2).getContext("2d");
-    new Chart(ChartSongCountByMonth).Bar($scope.songDataByMonth);
-  };
-
-  $scope.makeChart2();
+    client.draw(query, document.getElementById("ChartSongCountByMonth"), {
+        chartType: "areachart",
+        title: "Song Plays by Month",
+        height: 350,
+        width: 400,
+        legend: { position: "none" }
+    });
+  });
 
 
 }]);
@@ -614,17 +605,22 @@ blocJams.service('Metric', ['$rootScope', '$firebaseArray', function($rootScope,
   //songplayer service example at 232
 
   var songDataObject = {};
+
+  //setting up instance for Keen project (bloc-jams-data) 
+  var client = new Keen({
+          projectId: "5579cb6346f9a779cb3dee22",   // String (required always)
+          writeKey: "d37e46e682c9046ca1766f6cba815f833299bffa1c6fdaa5a94e484f3c67973eedf775e143768bd29dcbd809a823da8d687e1c5d3538e94403da41b7dad03a16e17b5fc2731c06d52a4d3a519f206437563736ec42af4f2a30968042926da829a2097afb01d8e206e27d32e8c8f99ae5",     // String (required for sending data)
+          readKey: "394c80e1b52d1468d2205bd4bfde02456a6fed068f97e4829b62343601ac4da1f7f1e272b64e57d2984f04b8c68f749e58b763332f3e7910cb65bb1763c6fc15d923cf772b1cb5189962bed4d307a96a6973b508158babd5563a2fee4e98ba545f614342d37103b5e9d128ef13489629",       // String (required for querying data)
+          protocol: "https",              // String (optional: https | http | auto)
+          host: "api.keen.io/3.0",        // String (optional)
+          requestType: "jsonp"            // String (optional: jsonp, xhr, beacon)
+  });
+
   //Notes on Service
   //Can include private or helper functions before the return object in a service
   //What is in the return objects is essentially a public API as those properties
   //will be available to those that use the Metric service
   return {
-  
-    //test counter only
-    countMore: function() {
-      $rootScope.counter += 1;
-      console.log("here is the count on Metric.countMore", $rootScope.counter);
-    },
 
     // Function that records a metric object by pushing it to the $rootScope array.
     // To use, we can call the service, Metric.registerSongPlay(passAsongObject) on an event or element
@@ -636,174 +632,22 @@ blocJams.service('Metric', ['$rootScope', '$firebaseArray', function($rootScope,
 
       //Isolate song name and timestamp to the song data object
       songDataObject.songName = songObj.name;
-      songDataObject.playedAt = songObj.playedAt;
-      
-      //connect Firebase array
-      var ref = new Firebase("https://dazzling-torch-1941.firebaseio.com/songRegister");
+      songDataObject.playedAt = songObj.playedAt; //redundant since Keen adds timestamp
 
-      // create a synchronized array
-      $rootScope.songRegister = $firebaseArray(ref);
-
-      //add songDataObject to firebase array
-      $rootScope.songRegister.$add(songDataObject);
-
-      //broadcast fires the event down the scope
-      // $rootScope.$broadcast('songPlayDateStamped', 'songObj');
-      $rootScope.$broadcast("testEvent", $rootScope.songRegister);
-
-      console.log("This is songRegister:", $rootScope.songRegister);
-
-    },
-    //note songPlays object: values: blue, May(4), 3 | Prop: name, playedAt, playedCount | obj: obj 1, obj 2, ...
-    // songCountByName: function() {
-    //   //create array & initialize array with zero value otherwise returns NaN
-    //   var countSongName = new Array (5); 
-    //   for (var i = 0; i < countSongName.length; i++) {
-    //     countSongName[i] = 0;
-    //   };
-    //   angular.forEach($rootScope.songPlays, function(value){
-    //     countSongName[0] += value.name === 'Blue' ? 1 : 0;
-    //     countSongName[1] += value.name === 'Green' ? 1 : 0; 
-    //     countSongName[2] += value.name === 'Red' ? 1 : 0;
-    //     countSongName[3] += value.name === 'Pink' ? 1 : 0;
-    //     countSongName[4] += value.name === 'Magenta' ? 1 : 0;
-      
-    //   $rootScope.countSongName = countSongName;
-
-    //   return $rootScope.countSongName;
-    //   });
-    
-    // console.log("this is count of blue:", $rootScope.countSongName[0]);
-    // console.log("this is countSongName for green:", countSongName[1]);
-    // console.log("this is countSongName for magenta:", countSongName[4]);
-
-    // },
-
-    songCountByMonth: function() {
-      //create array & initialize array with zero value otherwise returns NaN
-      var countSongMonth = new Array (12);
-      for (var i = 0; i < countSongMonth.length; i++) {
-        countSongMonth[i] = 0;
-      };
-      angular.forEach($rootScope.songPlays, function(value){
-        countSongMonth[0] += value.playedAt === 'January' ? 1 : 0;
-        countSongMonth[1] += value.playedAt === 'February' ? 1 : 0; 
-        countSongMonth[2] += value.playedAt === 'March' ? 1 : 0;
-        countSongMonth[3] += value.playedAt === 'April' ? 1 : 0;
-        countSongMonth[4] += value.playedAt === 'May' ? 1 : 0;
-        countSongMonth[5] += value.playedAt === 'June' ? 1 : 0;
-        countSongMonth[6] += value.playedAt === 'July' ? 1 : 0; 
-        countSongMonth[7] += value.playedAt === 'August' ? 1 : 0;
-        countSongMonth[8] += value.playedAt === 'September' ? 1 : 0;
-        countSongMonth[9] += value.playedAt === 'October' ? 1 : 0;
-        countSongMonth[10] += value.playedAt === 'November' ? 1 : 0;
-        countSongMonth[11] += value.playedAt === 'December' ? 1 : 0;
-
-      $rootScope.countSongMonth = countSongMonth;
-
-      return $rootScope.countSongMonth;
-
+      // Send it to the "purchases" collection
+      client.addEvent("songData", songDataObject, function(err, res){
+        if (err) {
+          // there was an error!
+        }
+        else {
+          //"success": true
+        }
       });
-    
-    console.log("this is count of January:", countSongMonth[0]);
-    console.log("this is countSongMonth for February:", countSongMonth[1]);
-    console.log("this is countSongMonth for May:", countSongMonth[4]);
-
-    },
-
-    // listSongsPlayed: function() {
-    //   console.log("start listSongsPlayed:");
-    //   console.log("here is rootScope.songplays from listSongsPlayed function:", $rootScope.songPlays);
-    //   var songs = [];
-
-    // // BLOC boilerplate
-    //   // angular.forEach($rootScope.songPlays, function(song) {
-    //   //   // Check to make sure the song isn't listed twice.
-    //   //   if (songs.indexOf(song.name) != -1) {
-    //   //    songs.push(song.name); 
-    //   //   }
-    //   // });
-
-    //   console.log("listSongsPlayed songs var:", songs);
-    //   return songs;
-    // },
-
-    getDataSongPlaysBySongName: function() {
-      //var array1 = [10, 59, 80, 81, 56, 55, 100]
-      return {
-        labels: ["Blue", "Green", "Red", "Pink", "Magenta"],
-        datasets: [
-        {
-          label: "Song Plays by Song Name",
-          fillColor: "rgba(220,220,220,0.5)",
-          strokeColor: "rgba(220,220,220,0.8)",
-          highlightFill: "rgba(220,220,220,0.75)",
-          highlightStroke: "rgba(220,220,220,1)",
-          data: $rootScope.countSongName
-        }
-        ]
-      };
-    },
-
-    getDataSongPlaysByMonth: function() {
-      //var array2 = [50, 10, 50, 50, 56, 55, 22, 45, 33, 36, 50, 55]
-
-      return {
-        labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-        datasets: [
-        {
-          label: "Song Plays by Song Month",
-          fillColor: "rgba(220,220,220,0.5)",
-          strokeColor: "rgba(220,220,220,0.8)",
-          highlightFill: "rgba(220,220,220,0.75)",
-          highlightStroke: "rgba(220,220,220,1)",
-          data: $rootScope.countSongMonth
-        }
-        ]
-      };
-    },
-
+    } 
   }; //end Return
 }]); //end Metric Service
 
-//create directive for Charting
-blocJams.directive('charting', ['$document', function ($document) {
-  return {
-    templateUrl: '/templates/directives/charting.html', //the path to an HTML template
-    restrict: 'E', //instructs to treat as an element, <slider>; e.g. wont run on <div slider>
-    link: function(scope, element, attributes) {
-      var testData = {
-          labels: ["January", "February", "March", "April", "May", "June", "July"],
-          datasets: [
-              {
-                  label: "My First dataset",
-                  fillColor: "rgba(220,220,220,0.5)",
-                  strokeColor: "rgba(220,220,220,0.8)",
-                  highlightFill: "rgba(220,220,220,0.75)",
-                  highlightStroke: "rgba(220,220,220,1)",
-                  data: [65, 59, 80, 81, 56, 55, 40]
-              },
-              {
-                  label: "My Second dataset",
-                  fillColor: "rgba(151,187,205,0.5)",
-                  strokeColor: "rgba(151,187,205,0.8)",
-                  highlightFill: "rgba(151,187,205,0.75)",
-                  highlightStroke: "rgba(151,187,205,1)",
-                  data: [28, 48, 40, 19, 86, 27, 100]
-              }
-          ]
-      };
 
-      var clicksChart = document.getElementById("clicksChart").getContext("2d");
-      new Chart(clicksChart).Line(testData);
-
-      //Bloc provided example
-      //var ctx = $("#pie-chart").get(0).getContext("2d");
-      //new Chart(ctx).Pie(attributes.pieData, options);
-    }
-  };
-
-}]);
 
 
 
