@@ -2,13 +2,13 @@
 
 ### Overview
 
-This analytics service is a custom feature I built on top of Bloc Jams music service app. It tracks the internal metrics of total song plays by song name, total song plays by day, and total song plays by month. The metrics are displayed as charts in a dashboard view.
+This analytics service is a custom feature I built on top of the Bloc Jams music service app. It tracks the internal metrics of total song plays by song name, total song plays by day, and total song plays by month. The metrics are displayed as charts in a dashboard view.
 
 Components:
 <ol>
   <li>A client side event handler that executes a callback when a metric is recorded</li>
   <li>An Angular model to capture displayable events</li>
-  <li>A new state accessible in the navigation to view event results/charts</li>
+  <li>A new "Analytics" state accessible in the navigation to view event results/charts</li>
 </ol>
 
 ### Stack
